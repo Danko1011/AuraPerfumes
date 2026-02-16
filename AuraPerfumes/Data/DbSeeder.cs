@@ -16,7 +16,7 @@ namespace AuraPerfumes.Data
 
             var admin = new IdentityUser
             {
-                UserName = "Admin",
+                UserName = "admin@gmail.com",
                 Email = "admin@gmail.com",
                 EmailConfirmed = true
             };

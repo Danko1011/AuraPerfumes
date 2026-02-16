@@ -17,16 +17,18 @@ namespace AuraPerfumes
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultUI()
+                .AddDefaultTokenProviders();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
-            using(var scope = app.Services.CreateScope())
+            /*using(var scope = app.Services.CreateScope())
             {
                 await DbSeeder.SeedDefaultData(scope.ServiceProvider);
             }
-
+            */
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
