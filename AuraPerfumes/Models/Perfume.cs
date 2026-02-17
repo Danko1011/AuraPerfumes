@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuraPerfumes.Models
 {
-    [Table("Book")]
+    [Table("Perfume")]
     public class Perfume
     {
         public int Id { get; set; }
@@ -21,6 +21,9 @@ namespace AuraPerfumes.Models
         public Gender Gender { get; set; }
         public List<OrderDetail> OrderDetail { get; set; }
         public List<CartDetail> CartDetail { get; set; }
+
+        [NotMapped]
+        public string GenderName { get; set; }
 
     }
 }
