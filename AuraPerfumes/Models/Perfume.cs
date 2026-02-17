@@ -11,6 +11,9 @@ namespace AuraPerfumes.Models
         [MaxLength(40)]
         public string? PerfumeName { get; set; }
         [Required]
+        [MaxLength(40)]
+        public string? PerfumeModel { get; set; }
+        [Required]
         public double Price { get; set; }
         public string? Image { get; set; }
         [Required]
