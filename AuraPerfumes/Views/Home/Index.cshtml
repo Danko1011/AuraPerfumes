@@ -1,4 +1,5 @@
 ﻿@model PerfumeDisplayModel
+
 @{
 
 }
@@ -8,21 +9,21 @@
         <form asp-action="Index" class="row row-cols-lg-auto g-3 align-items-center">
   
   <div class="col-12">
-    <label class="visually-hidden" for="inlineFormSelectPref">Gender</label>
+            <label class="visually-hidden" for="genderId">Gender</label>
     <select class="form-select" id="genderId" name="genderId">
-      <option selected>Choose...</option>
+      <option selected>Gender</option>
                 @foreach(var gender in Model.Genders)
                 {
-                    <option value="@gender.Id">@gender.GenderLabel</option>
+                    <option selected="@(gender.Id == Model.GenderId)" value="@gender.Id">@gender.GenderLabel</option>
                 }               
     </select>
   </div>
 
             <div class="col-12">
-                <label class="visually-hidden" for="inlineFormInputGroupUsername">Search by Designer</label>
+            <label class="visually-hidden" for="sterm">Search by Designer</label>
                 <div class="input-group">
                     <div class="input-group-text"></div>
-                    <input type="text" class="form-control" id="sterm" name="sterm" placeholder="Search by Designer">
+                    <input type="text" class="form-control" value=""@Model.STerm id="sterm" name="sterm" placeholder="Search by Designer">
                 </div>
             </div>
 
@@ -30,6 +31,8 @@
 
   <div class="col-12">
     <button type="submit" class="btn btn-primary">Search</button>
+            <a href="/Home/Index" type="reset" class="btn btn-dark">Reset</a>
+
   </div>
 
     </form>
@@ -49,12 +52,12 @@
             }
             
     <div class="card-body">
-        <h5 class="card-title">@perfume.PerfumeName</h5>
+        <h5 class="card-title">@perfume.PerfumeModel</h5>
         <p class="card-text">
             Gender:@perfume.GenderName
-            Perfume:@perfume.PerfumeName
-            Price:@perfume.Price
         </p>
+        <p>Designer:@perfume.PerfumeName </p>
+        <p>Price:@perfume.Price</p>
         <a href="#" class="btn btn-primary">Add to cart</a>
     </div>
 </div>

@@ -24,9 +24,11 @@ namespace AuraPerfumes.Controllers
             PerfumeDisplayModel perfumeModel = new PerfumeDisplayModel
             {
                 Perfumes = perfumes,
-                Genders=genders
+                Genders=genders,
+                STerm=sterm,
+                GenderId=genderId
             };
-            return View(perfumes);
+            return View(perfumeModel);
         }
 
         public IActionResult Privacy()

@@ -11,6 +11,7 @@ namespace AuraPerfumes.Models
             [Required]
             [MaxLength(40)]
             public string GenderLabel { get; set; }
+
         public List<Perfume> Perfumes { get; set; }
         }
     

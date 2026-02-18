@@ -16,7 +16,7 @@ namespace AuraPerfumes.Repositories
             return  await _db.Genders.ToListAsync();
         }
         
-        public async Task<IEnumerable<Perfume>> GetPerfumes(string sTerm="", int genderId = 0)
+        public async Task<IEnumerable<Perfume>> GetPerfumes(string sTerm=" ", int genderId = 0)
         {
             sTerm = sTerm.ToLower();
             IEnumerable<Perfume> perfumes = await (from perfume in _db.Perfumes
@@ -32,7 +32,7 @@ namespace AuraPerfumes.Repositories
                                 PerfumeModel = perfume.PerfumeModel,
                                 GenderId = perfume.GenderId,
                                 Price = perfume.Price,
-                                GenderName = perfume.GenderName,
+                                GenderName = gender.GenderLabel,
                             }
                             )
                             .ToListAsync();
