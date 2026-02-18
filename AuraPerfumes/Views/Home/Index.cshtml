@@ -41,23 +41,23 @@
     @foreach (var perfume in Model.Perfumes){
 
 
-        <div class="card mx-2 mb-4" style="width: 16rem;">
+        <div class="card mx-2 mb-4" style="width: 13rem;">
             @if (string.IsNullOrEmpty(perfume.Image))
             {
-                <img style="width:100%;height:300px"src="/images/proba.png" class="card-img-top" alt="...">
+                <img style="width:100%;height:180px"src="/images/proba.png" class="card-img-top" alt="...">
             }
             else
             {
-                <img style="width:100%;height:300px" src="/images/@perfume.Image" class="card-img-top" alt="...">
+                <img style="width:100%;height:180px" src="/images/@perfume.Image" class="card-img-top" alt="...">
             }
             
     <div class="card-body">
         <h5 class="card-title">@perfume.PerfumeModel</h5>
         <p class="card-text">
-            Gender:@perfume.GenderName
+                    <b>Gender:</b>@perfume.GenderName <br/>
+                    <b>Designer:</b>@perfume.PerfumeName <br/>
+            <b>Price:</b>@perfume.Price
         </p>
-        <p>Designer:@perfume.PerfumeName </p>
-        <p>Price:@perfume.Price</p>
         <a href="#" class="btn btn-primary">Add to cart</a>
     </div>
 </div>
