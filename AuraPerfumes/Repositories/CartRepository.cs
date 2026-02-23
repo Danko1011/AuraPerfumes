@@ -91,7 +91,7 @@ namespace AuraPerfumes.Repositories
         }
 
 
-        public async Task<IEnumerable<ShoppingCart>> GetUserCart()
+        public async Task<ShoppingCart> GetUserCart()
         {
             var userId = GetUserId();
             if (userId == null)
@@ -100,7 +100,7 @@ namespace AuraPerfumes.Repositories
                 .Include(a=>a.CartDetails)
                 .ThenInclude(a=>a.Perfume)
                 .ThenInclude(a=> a.Gender)
-                .Where(a=>a.UserId == userId).ToListAsync();
+                .Where(a=>a.UserId == userId).FirstOrDefaultAsync();
             return shoppingCart;
         }
 
