@@ -28,8 +28,8 @@ namespace AuraPerfumes
             /*using(var scope = app.Services.CreateScope())
             {
                 await DbSeeder.SeedDefaultData(scope.ServiceProvider);
-            }
-            */
+            }*/
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
