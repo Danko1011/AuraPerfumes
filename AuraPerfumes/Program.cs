@@ -23,7 +23,8 @@ namespace AuraPerfumes
                 .AddDefaultTokenProviders();
             builder.Services.AddControllersWithViews();
             builder.Services.AddTransient<IHomeRepository, HomeRepository>();
-            builder.Services.AddTransient<ICartRepository, CartRepository>();
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
+            builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
             /*using(var scope = app.Services.CreateScope())
             {
@@ -46,7 +47,7 @@ namespace AuraPerfumes
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

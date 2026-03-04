@@ -5,35 +5,44 @@
 }
 
 <div class="my-2">
-    
-        <form asp-action="Index" class="row row-cols-lg-auto g-3 align-items-center">
-  
-  <div class="col-12">
-            <label class="visually-hidden" for="genderId">Gender</label>
-    <select class="form-select" id="genderId" name="genderId">
-      <option selected>Gender</option>
-                @foreach(var gender in Model.Genders)
+
+    <form asp-action="Index" method="get" class="row g-2 align-items-end mb-3">
+
+        <div class="col-auto">
+            <select class="form-select" id="genderId" name="genderId">
+                <option value="0">All genders</option>
+                @foreach (var gender in Model.Genders)
                 {
-                    <option selected="@(gender.Id == Model.GenderId)" value="@gender.Id">@gender.GenderLabel</option>
-                }               
-    </select>
-  </div>
+                    <option value="@gender.Id" selected="@(gender.Id == Model.GenderId)">
+                        @gender.GenderLabel
+                    </option>
+                }
+            </select>
+        </div>
 
-            <div class="col-12">
-            <label class="visually-hidden" for="sterm">Search by Designer</label>
-                <div class="input-group">
-                    <div class="input-group-text"></div>
-                    <input type="text" class="form-control" value=""@Model.STerm id="sterm" name="sterm" placeholder="Search by Designer">
-                </div>
-            </div>
+        <div class="col-auto">
+            <select class="form-select" id="designerName" name="designerName">
+                <option value="">All designers</option>
+                @foreach (var d in Model.Designers)
+                {
+                    <option value="@d" selected="@(d == Model.DesignerName)">@d</option>
+                }
+            </select>
+        </div>
 
-  
+        <div class="col">
+            <input type="text"
+                   class="form-control"
+                   id="model"
+                   name="model"
+                   value="@Model.Model"
+                   placeholder="Search by Model " />
+        </div>
 
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary">Search</button>
-            <a href="/Home/Index" type="reset" class="btn btn-dark">Reset</a>
-
-  </div>
+        <div class="col-auto d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Reset</a>
+        </div>
 
     </form>
 </div>
@@ -42,14 +51,16 @@
 
 
         <div class="card mx-2 mb-4" style="width: 13rem;">
-            @if (string.IsNullOrEmpty(perfume.Image))
-            {
-                <img style="width:100%;height:180px"src="/images/proba.png" class="card-img-top" alt="...">
+            @{
+                var img = string.IsNullOrWhiteSpace(perfume.Image)
+                ? Url.Content("~/images/proba.png")
+                : perfume.Image;
             }
-            else
-            {
-                <img style="width:100%;height:180px" src="/images/@perfume.Image" class="card-img-top" alt="...">
-            }
+
+            <img src="@img"
+                 style="width:100%;height:180px;object-fit:cover;"
+                 class="card-img-top"
+                 alt="@perfume.PerfumeModel">
             
     <div class="card-body">
         <h5 class="card-title">@perfume.PerfumeModel</h5>
@@ -58,7 +69,14 @@
                     <b>Designer:</b>@perfume.PerfumeName <br/>
             <b>Price:</b>@perfume.Price
         </p>
-        <button type="button" onclick="add(@perfume.Id)"class="btn btn-primary">Add to cart</button>
+                <a asp-controller="Cart"
+                   asp-action="AddItem"
+                   asp-route-perfumeId="@perfume.Id"
+                   asp-route-qty="1"
+                   asp-route-redirect="1"
+                   class="btn btn-primary">
+                    Add to cart
+                </a>
     </div>
 </div>
     }

@@ -16,18 +16,22 @@ namespace AuraPerfumes.Controllers
             _homeRepository = homeRepository;
         }
 
-        public async Task<IActionResult> Index(string sterm = "", int genderId = 0)
+        public async Task<IActionResult> Index(string model = "", int genderId = 0, string designerName = "")
         {
-            
-            IEnumerable<Perfume> perfumes = await _homeRepository.GetPerfumes(sterm, genderId);
+            IEnumerable<Perfume> perfumes = await _homeRepository.GetPerfumes(model, genderId, designerName);
             IEnumerable<Gender> genders = await _homeRepository.Genders();
+            IEnumerable<string> designers = await _homeRepository.Designers();
+
             PerfumeDisplayModel perfumeModel = new PerfumeDisplayModel
             {
                 Perfumes = perfumes,
-                Genders=genders,
-                STerm=sterm,
-                GenderId=genderId
+                Genders = genders,
+                Designers = designers,
+                Model = model,
+                GenderId = genderId,
+                DesignerName = designerName
             };
+
             return View(perfumeModel);
         }
 

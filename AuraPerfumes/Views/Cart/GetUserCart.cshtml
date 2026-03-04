@@ -23,14 +23,13 @@
                 <tr>
                     <td>@item.Perfume.PerfumeName</td>
                     <td>
-                        @if (!string.IsNullOrEmpty(item.Perfume.Image))
+                        @if (string.IsNullOrEmpty(item.Perfume.Image))
                         {
-							<img src="/images/proba.png" style="width:80px;height:100px" />
+                            <img src="@Url.Content("~/images/proba.png")" style="width:80px;height:100px;object-fit:cover;" />
                         }
                         else
                         {
-                            
-                            <img src="@item.Perfume.Image" style="width:80px;height:100px" />
+                            <img src="@item.Perfume.Image" style="width:80px;height:100px;object-fit:cover;" />
                         }
                     </td>
                     <td>@item.Perfume.Gender.GenderLabel    </td>

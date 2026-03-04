@@ -16,16 +16,16 @@ namespace AuraPerfumes.Repositories
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<int>AddItem(int perfumeId, int qty)
+        public async Task<int>AddItem(int perfumeId, int qty,string userId)
         {
-            string userId = GetUserId();
+            
             using var transaction = _db.Database.BeginTransaction();
             try
             {
 
-
                 if (string.IsNullOrEmpty(userId))
                     throw new Exception("user is not logged-in");
+
                 var cart = await GetCart(userId);
                 if (cart is null)
                 {
@@ -55,8 +55,10 @@ namespace AuraPerfumes.Repositories
                 _db.SaveChanges();
                 transaction.Commit();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                transaction.Rollback();
+                throw;
             }
             var cartItemCount = await GetCartItemCount(userId);
             return cartItemCount;
@@ -114,23 +116,24 @@ namespace AuraPerfumes.Repositories
 
         public async Task<int> GetCartItemCount(string userId = "")
         {
-            if (!string.IsNullOrEmpty(userId))
-            {
-                userId = GetUserId();
-            }
+            if (string.IsNullOrEmpty(userId))
+                return 0;
+
             var data = await (from cart in _db.ShoppingCarts
                               join cartDetails in _db.CartDetails
                               on cart.Id equals cartDetails.ShoppingCartId
-                              select new { cartDetails.Id }
-                              ).ToListAsync();
+                              where cart.UserId == userId
+                              select cartDetails.Id)
+                             .ToListAsync();
             return data.Count;
         }
 
         private string GetUserId()
         {
-            var principal = _httpContextAccessor.HttpContext.User;
-            var userId = _userManager.GetUserId(principal);
-            return userId;
+            var principal = _httpContextAccessor?.HttpContext?.User;
+            if (principal == null) return ""; 
+
+            return _userManager.GetUserId(principal) ?? "";
         }
 
 

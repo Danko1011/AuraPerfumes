@@ -15,33 +15,44 @@ namespace AuraPerfumes.Repositories
         {
             return  await _db.Genders.ToListAsync();
         }
-        
-        public async Task<IEnumerable<Perfume>> GetPerfumes(string sTerm=" ", int genderId = 0)
-        {
-            sTerm = sTerm.ToLower();
-            IEnumerable<Perfume> perfumes = await (from perfume in _db.Perfumes
-                            join gender in _db.Genders
-                            on perfume.GenderId equals gender.Id
-                            where string.IsNullOrWhiteSpace(sTerm) ||
-                            (perfume!=null  && perfume.PerfumeName.ToLower().StartsWith(sTerm))
-                            select new Perfume
-                            {
-                                Id = perfume.Id,
-                                Image = perfume.Image,
-                                PerfumeName = perfume.PerfumeName,
-                                PerfumeModel = perfume.PerfumeModel,
-                                GenderId = perfume.GenderId,
-                                Price = perfume.Price,
-                                GenderName = gender.GenderLabel,
-                            }
-                            )
-                            .ToListAsync();
-            if(genderId > 0)
-            {
-                perfumes = perfumes.Where(a => a.GenderId == genderId).ToList();
-            }
-            return perfumes;
 
+        public async Task<IEnumerable<Perfume>> GetPerfumes(string model = "", int genderId = 0, string designerName = "")
+        {
+            model = (model ?? "").ToLower().Trim();
+            designerName = (designerName ?? "").Trim();
+
+            var query =
+                from perfume in _db.Perfumes
+                join gender in _db.Genders on perfume.GenderId equals gender.Id
+                select new Perfume
+                {
+                    Id = perfume.Id,
+                    Image = perfume.Image,
+                    PerfumeName = perfume.PerfumeName,     // Designer
+                    PerfumeModel = perfume.PerfumeModel,   // Model
+                    GenderId = perfume.GenderId,
+                    Price = perfume.Price,
+                    GenderName = gender.GenderLabel
+                };
+
+            if (genderId > 0)
+                query = query.Where(p => p.GenderId == genderId);
+
+            if (!string.IsNullOrWhiteSpace(designerName))
+                query = query.Where(p => p.PerfumeName == designerName);
+
+            if (!string.IsNullOrWhiteSpace(model))
+                query = query.Where(p => p.PerfumeModel.ToLower().Contains(model));
+
+            return await query.ToListAsync();
+        }
+        public async Task<IEnumerable<string>> Designers()
+        {
+            return await _db.Perfumes
+                .Select(p => p.PerfumeName)
+                .Distinct()
+                .OrderBy(x => x)
+                .ToListAsync();
         }
     }
 }
