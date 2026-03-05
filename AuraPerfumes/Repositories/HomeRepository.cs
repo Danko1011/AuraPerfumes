@@ -54,5 +54,12 @@ namespace AuraPerfumes.Repositories
                 .OrderBy(x => x)
                 .ToListAsync();
         }
+        public async Task<Perfume?> GetPerfumeDetails(int id)
+        {
+            return await _db.Perfumes
+                .Include(p => p.Gender)
+                .Include(p => p.Variants)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }

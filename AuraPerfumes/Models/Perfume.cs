@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Humanizer;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuraPerfumes.Models
@@ -21,6 +22,9 @@ namespace AuraPerfumes.Models
         public Gender Gender { get; set; }
         public List<OrderDetail> OrderDetail { get; set; }
         public List<CartDetail> CartDetail { get; set; }
+
+        public string? Description { get; set; }
+        public List<PerfumeVariant> Variants { get; set; } = new();
 
         [NotMapped]
         public string GenderName { get; set; }

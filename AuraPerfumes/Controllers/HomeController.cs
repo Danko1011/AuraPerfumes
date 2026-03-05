@@ -34,6 +34,19 @@ namespace AuraPerfumes.Controllers
 
             return View(perfumeModel);
         }
+        public async Task<IActionResult> Details(int id)
+        {
+            var perfume = await _homeRepository.GetPerfumeDetails(id);
+            if (perfume == null) return NotFound();
+
+            var vm = new PerfumeDetailsVM
+            {
+                Perfume = perfume,
+                SelectedVariantId = perfume.Variants.FirstOrDefault()?.Id ?? 0
+            };
+
+            return View(vm);
+        }
 
         public IActionResult Privacy()
         {

@@ -20,5 +20,7 @@ namespace AuraPerfumes.Data
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
 
+        public DbSet<PerfumeVariant> PerfumeVariants { get; set; }
+
     }
 }

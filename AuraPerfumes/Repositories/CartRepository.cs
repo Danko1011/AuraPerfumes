@@ -63,33 +63,41 @@ namespace AuraPerfumes.Repositories
             var cartItemCount = await GetCartItemCount(userId);
             return cartItemCount;
         }
-        public async Task<int> RemoveItem(int perfumeId)
+        public async Task<int> RemoveItem(int perfumeId, int variantId)
         {
             string userId = GetUserId();
-            //using var transaction = _db.Database.BeginTransaction();
+
             try
             {
-
                 if (string.IsNullOrEmpty(userId))
                     throw new Exception("user is not logged-in");
+
                 var cart = await GetCart(userId);
-                if (cart is null)
+                if (cart == null)
                     throw new Exception("Invalid Cart");
-                var cartItem = _db.CartDetails.FirstOrDefault(a => a.ShoppingCartId == cart.Id && a.PerfumeId == perfumeId);
-                if (cartItem is null)
+
+                var cartItem = _db.CartDetails.FirstOrDefault(a =>
+                    a.ShoppingCartId == cart.Id &&
+                    a.PerfumeId == perfumeId &&
+                    a.VariantId == variantId);
+
+                if (cartItem == null)
                     throw new Exception("No items in cart");
-                else if (cartItem.Quantity == 1)                
-                    _db.CartDetails.Remove(cartItem);              
-                else             
-                    cartItem.Quantity = cartItem.Quantity - 1;             
+
+                if (cartItem.Quantity == 1)
+                    _db.CartDetails.Remove(cartItem);
+                else
+                    cartItem.Quantity = cartItem.Quantity - 1;
+
                 _db.SaveChanges();
             }
             catch (Exception ex)
             {
+
             }
+
             var cartItemCount = await GetCartItemCount(userId);
             return cartItemCount;
-
         }
 
 

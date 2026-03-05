@@ -5,5 +5,6 @@
         Task<IEnumerable<Perfume>> GetPerfumes(string sTerm = "", int genderId = 0 ,string designerName = "");
         Task<IEnumerable<Gender>> Genders();
         Task<IEnumerable<string>> Designers();
+        Task<Perfume?> GetPerfumeDetails(int id);
     }
 }

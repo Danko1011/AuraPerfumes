@@ -17,10 +17,9 @@ namespace AuraPerfumes.Controllers
             _userManager = userManager;
         }
 
-        
-        public async Task<IActionResult> AddItem(int perfumeId, int qty = 1, int redirect = 0)
+        public async Task<IActionResult> AddItem(int perfumeId, int variantId, int qty = 1, int redirect = 0)
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User)!;
 
             int cartCount = await _cartRepo.AddItem(perfumeId, qty, userId);
 
@@ -29,9 +28,9 @@ namespace AuraPerfumes.Controllers
             return RedirectToAction("GetUserCart");
         }
 
-        public async Task<IActionResult> RemoveItem(int perfumeId)
+        public async Task<IActionResult> RemoveItem(int perfumeId, int variantId)
         {
-            var cartCount = await _cartRepo.RemoveItem(perfumeId);
+            var cartCount = await _cartRepo.RemoveItem(perfumeId, variantId);
             return RedirectToAction("GetUserCart");
         }
 

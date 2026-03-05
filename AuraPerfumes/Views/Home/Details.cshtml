@@ -1,0 +1,134 @@
+﻿@model AuraPerfumes.Models.DTOs.PerfumeDetailsVM
+
+@{
+    var p = Model.Perfume;
+
+    var imgSrc = string.IsNullOrWhiteSpace(p.Image)
+        ? Url.Content("~/images/proba.png")
+        : (p.Image.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? p.Image
+            : Url.Content("~/images/" + p.Image));
+}
+
+<div class="row g-4">
+    <div class="col-md-5">
+        <img src="@imgSrc" class="img-fluid rounded" alt="@p.PerfumeModel" />
+    </div>
+
+    <div class="col-md-7">
+        <h2>@p.PerfumeModel</h2>
+
+        <div class="text-muted mb-2">
+            Designer: @p.PerfumeName • Gender: @p.GenderName
+        </div>
+
+        <p class="mb-3">
+            @(string.IsNullOrWhiteSpace(p.Description) ? "No description yet." : p.Description)
+        </p>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Choose size</label>
+
+            @if (p.Variants != null && p.Variants.Any())
+            {
+                var ordered = p.Variants.OrderBy(v => v.Ml).ToList();
+                var selected = ordered.FirstOrDefault();
+
+                <div class="d-flex flex-wrap gap-2" id="variantButtons">
+                    @foreach (var v in ordered)
+                    {
+                        var isChecked = selected != null && v.Id == selected.Id;
+
+                        <input type="radio"
+                               class="btn-check"
+                               name="variantId"
+                               id="v_@v.Id"
+                               value="@v.Id"
+                               data-price="@v.Price"
+                               autocomplete="off"
+                               @(isChecked ? "checked" : "") />
+
+                        <label class="btn btn-outline-primary" for="v_@v.Id">
+                            @v.Ml ml
+                        </label>
+                    }
+                </div>
+
+                <div class="mt-3">
+                    <h4 class="mb-3">
+                        Price: <span id="priceText">@(selected?.Price.ToString() ?? "-")</span>
+                    </h4>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary" type="button" onclick="addToCartFromDetails(@p.Id)">
+                            Add to cart
+                        </button>
+                        <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Back</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="text-muted">No sizes available.</div>
+
+                <div class="mt-3">
+                    <h4 class="mb-3">Price: <span id="priceText">-</span></h4>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary" type="button" disabled>
+                            Add to cart
+                        </button>
+                        <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Back</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function getSelectedVariantId() {
+          const checked = document.querySelector('input[name="variantId"]:checked');
+          return checked ? checked.value : null;
+        }
+
+        function updatePriceFromSelected() {
+          const checked = document.querySelector('input[name="variantId"]:checked');
+          const priceText = document.getElementById('priceText');
+          if (!checked) {
+            priceText.innerText = "-";
+            return;
+          }
+          const price = checked.getAttribute('data-price');
+          priceText.innerText = price;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+          updatePriceFromSelected();
+          document.querySelectorAll('input[name="variantId"]').forEach(r => {
+            r.addEventListener('change', updatePriceFromSelected);
+          });
+        });
+
+        async function addToCartFromDetails(perfumeId) {
+          const variantId = getSelectedVariantId();
+          if (!variantId) {
+            alert("Please choose a size.");
+            return;
+          }
+
+          const url = `/Cart/AddItem?perfumeId=${perfumeId}&variantId=${variantId}&qty=1&redirect=0`;
+          const response = await fetch(url);
+
+          if (response.ok) {
+            const count = await response.json();
+            const el = document.getElementById("cartCount");
+            if (el) el.innerText = count;
+            alert("Added!");
+          } else {
+            alert("Error adding to cart");
+          }
+        }
+    </script>
+}

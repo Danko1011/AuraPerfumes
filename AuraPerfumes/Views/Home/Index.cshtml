@@ -57,28 +57,21 @@
                 : perfume.Image;
             }
 
-            <img src="@img"
-                 style="width:100%;height:180px;object-fit:cover;"
-                 class="card-img-top"
-                 alt="@perfume.PerfumeModel">
-            
-    <div class="card-body">
-        <h5 class="card-title">@perfume.PerfumeModel</h5>
-        <p class="card-text">
-                    <b>Gender:</b>@perfume.GenderName <br/>
-                    <b>Designer:</b>@perfume.PerfumeName <br/>
-            <b>Price:</b>@perfume.Price
-        </p>
-                <a asp-controller="Cart"
-                   asp-action="AddItem"
-                   asp-route-perfumeId="@perfume.Id"
-                   asp-route-qty="1"
-                   asp-route-redirect="1"
-                   class="btn btn-primary">
-                    Add to cart
-                </a>
-    </div>
-</div>
+            <a asp-controller="Home" asp-action="Details" asp-route-id="@perfume.Id" style="text-decoration:none; color:inherit;">
+                <img src="@img" style="width:100%;height:180px;object-fit:cover;" class="card-img-top" alt="@perfume.PerfumeModel" />
+                <div class="card-body">
+                    <h5 class="card-title">@perfume.PerfumeModel</h5>
+                </div>
+            </a>
+
+            <div class="card-body">
+                <p class="card-text">
+                    <b>Gender:</b>@perfume.GenderName <br />
+                    <b>Designer:</b>@perfume.PerfumeName <br />
+                    <b>Price:</b>@perfume.Price
+                </p>
+            </div>
+        </div>
     }
 </div>
 

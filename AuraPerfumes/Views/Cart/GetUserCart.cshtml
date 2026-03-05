@@ -37,7 +37,7 @@
                     <td>@(item.Perfume.Price*item.Quantity)</td>
                     <td>
                         <a class="btn btn-info" href="/Cart/AddItem?perfumeId=@item.PerfumeId&&redirect=1">+</a>
-                        <a class="btn btn-info" href="/Cart/removeitem?perfumeId=@item.PerfumeId">-</a>
+                        <a class="btn btn-info" href="/Cart/RemoveItem?perfumeId=@item.PerfumeId&variantId=@item.VariantId">-</a>
                     </td>
                 </tr>
             }
