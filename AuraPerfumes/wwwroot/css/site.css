@@ -1,4 +1,17 @@
-﻿.details-image {
+﻿body {
+    background: linear-gradient(135deg, #eef2f7, #dfe6ed);
+}
+
+/* Layout */
+.container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* Details page */
+.details-image {
     max-height: 520px;
     object-fit: contain;
     background: #fff;
@@ -8,11 +21,11 @@
 
 .price-box {
     display: inline-block;
+    min-width: 180px;
     padding: 16px 22px;
     border: 1px solid #e5e5e5;
     border-radius: 16px;
     background: #fafafa;
-    min-width: 180px;
 }
 
 .price-label {
@@ -33,10 +46,6 @@
     font-weight: 600;
 }
 
-.perfume-description {
-    line-height: 1.8;
-    color: #333;
-}
 .description-box {
     max-width: 720px;
 }
@@ -74,6 +83,7 @@
     }
 
 .info-box {
+    max-width: 260px;
     background: #f9fafb;
     padding: 16px;
     border-radius: 12px;
@@ -81,9 +91,9 @@
     font-size: 14px;
     color: #444;
     line-height: 1.8;
-    max-width: 260px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.04);
 }
+
 .details-bottom-section {
     margin-top: 60px;
 }
@@ -95,50 +105,69 @@
     color: #1f2937;
 }
 
-.benefits-grid {
+/* Grids */
+.benefits-grid,
+.details-info-grid,
+.related-products-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
 
-.benefit-card {
-    background: #ffffff;
+.benefits-grid,
+.details-info-grid,
+.related-products-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Cards */
+.benefit-card,
+.details-info-card,
+.related-product-card,
+.related-card {
+    background: #fff;
     border: 1px solid #e9ecef;
     border-radius: 16px;
-    padding: 22px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.04);
 }
+
+.benefit-card,
+.details-info-card,
+.related-product-card {
+    padding: 22px;
+}
+
+.related-card {
+    display: block;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+    .related-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
 
 .benefit-icon {
     font-size: 22px;
     margin-bottom: 10px;
 }
 
-.benefit-title {
+.benefit-title,
+.related-product-name {
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 8px;
     color: #212529;
 }
 
-.benefit-text {
+.benefit-text,
+.related-product-text {
     font-size: 14px;
     color: #6b7280;
     line-height: 1.7;
-}
-
-.details-info-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.details-info-card {
-    background: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 16px;
-    padding: 22px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
 }
 
 .details-info-label {
@@ -155,22 +184,9 @@
     color: #212529;
 }
 
-.related-products-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.related-product-card {
-    background: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-}
-
 .related-product-image-placeholder {
     height: 160px;
+    margin-bottom: 16px;
     border-radius: 12px;
     background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
     display: flex;
@@ -178,60 +194,7 @@
     justify-content: center;
     color: #6b7280;
     font-weight: 700;
-    margin-bottom: 16px;
 }
-
-.related-product-name {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: #212529;
-}
-
-.related-product-text {
-    font-size: 14px;
-    color: #6b7280;
-    line-height: 1.7;
-}
-@media (max-width: 992px) {
-    .benefits-grid,
-    .details-info-grid,
-    .related-products-grid {
-        grid-template-columns: 1fr;
-    }
-}
-body {
-    background: linear-gradient(135deg, #eef2f7, #dfe6ed);
-}
-
-.container {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-.related-products-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.related-card {
-    display: block;
-    background: white;
-    border-radius: 16px;
-    padding: 15px;
-    text-align: center;
-    text-decoration: none;
-    color: inherit;
-    transition: 0.3s;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-}
-
-    .related-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
 
 .related-img {
     max-height: 150px;
@@ -246,25 +209,16 @@ body {
 
 .related-price {
     color: #2c7a7b;
-    font-weight: bold;
-}
-.checkout-wrapper,
-.order-success-box {
-    background: rgba(255, 255, 255, 0.92);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-
-.checkout-total {
-    font-size: 24px;
     font-weight: 700;
 }
-.checkout-wrapper {
+
+/* Checkout / Success */
+.checkout-wrapper,
+.order-success-box {
     background: rgba(255, 255, 255, 0.94);
     border-radius: 24px;
     padding: 32px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.06);
     margin-top: 20px;
     margin-bottom: 30px;
 }
@@ -276,67 +230,86 @@ body {
         color: #1f2937;
     }
 
-    .checkout-wrapper .table {
-        background: white;
-        border-radius: 18px;
-        overflow: hidden;
-        margin-bottom: 0;
-    }
+.checkout-total {
+    font-size: 24px;
+    font-weight: 700;
+}
 
-        .checkout-wrapper .table thead th {
-            background: #f3f4f6;
-            color: #374151;
-            font-weight: 700;
-            border-bottom: none;
-            padding: 16px 14px;
-            font-size: 14px;
-        }
+.checkout-wrapper .row.align-items-start {
+    align-items: flex-start !important;
+}
 
-        .checkout-wrapper .table tbody td {
-            vertical-align: middle;
-            padding: 18px 14px;
-            border-color: #eef0f3;
-            font-size: 15px;
-            color: #1f2937;
-        }
+.checkout-wrapper .table {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
 
-        .checkout-wrapper .table tbody tr:hover {
-            background: #fafbfc;
-        }
-
-    .checkout-wrapper small {
-        color: #6b7280;
-        font-size: 13px;
-    }
-
-    .checkout-wrapper .form-label {
-        font-weight: 600;
+    .checkout-wrapper .table thead th {
+        background: #f3f4f6;
         color: #374151;
-        margin-bottom: 8px;
+        font-weight: 700;
+        border-bottom: none;
+        padding: 16px 14px;
+        font-size: 14px;
     }
 
-    .checkout-wrapper .form-select,
-    .checkout-wrapper .form-control {
-        border-radius: 14px;
-        padding: 12px 14px;
-        border: 1px solid #dbe1e8;
-        box-shadow: none;
+    .checkout-wrapper .table tbody td {
+        vertical-align: middle;
+        padding: 18px 14px;
+        border-color: #eef0f3;
         font-size: 15px;
+        color: #1f2937;
     }
 
-        .checkout-wrapper .form-select:focus,
-        .checkout-wrapper .form-control:focus {
-            border-color: #94a3b8;
-            box-shadow: 0 0 0 0.15rem rgba(148, 163, 184, 0.2);
-        }
+    .checkout-wrapper .table tbody tr:hover {
+        background: #fafbfc;
+    }
+
+.checkout-wrapper small {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.checkout-wrapper .form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.checkout-wrapper .form-select,
+.checkout-wrapper .form-control {
+    border-radius: 14px;
+    padding: 12px 14px;
+    border: 1px solid #dbe1e8;
+    box-shadow: none;
+    font-size: 15px;
+}
+
+    .checkout-wrapper .form-select:focus,
+    .checkout-wrapper .form-control:focus {
+        border-color: #94a3b8;
+        box-shadow: 0 0 0 0.15rem rgba(148, 163, 184, 0.2);
+    }
+
+.checkout-wrapper .btn-dark,
+.checkout-wrapper .btn-outline-secondary {
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-weight: 600;
+    font-size: 15px;
+}
 
 .checkout-summary-box {
     background: linear-gradient(180deg, #f8fafc, #f1f5f9);
     border: 1px solid #e5e7eb;
     border-radius: 20px;
     padding: 20px;
-    margin-top: 8px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    margin-top: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
 }
 
     .checkout-summary-box span {
@@ -360,40 +333,6 @@ body {
     color: #111827;
 }
 
-.checkout-wrapper .btn-dark {
-    border-radius: 14px;
-    padding: 12px 18px;
-    font-weight: 600;
-    font-size: 15px;
-}
-
-.checkout-wrapper .btn-outline-secondary {
-    border-radius: 14px;
-    padding: 12px 18px;
-    font-weight: 600;
-    font-size: 15px;
-}
-
-@media (max-width: 991px) {
-    .checkout-wrapper {
-        padding: 20px;
-    }
-
-        .checkout-wrapper h2 {
-            font-size: 26px;
-        }
-
-    .checkout-summary-box {
-        margin-top: 20px;
-    }
-}
-body {
-    background: linear-gradient(135deg, #eef2f7, #dfe6ed);
-}
-.checkout-wrapper .table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
 #cardFields {
     background: #f8fafc;
     border: 1px solid #e5e7eb;
@@ -403,12 +342,8 @@ body {
 }
 
     #cardFields input {
-        background: white;
+        background: #fff;
     }
-
-.checkout-summary-box {
-    margin-top: 12px;
-}
 
 .promo-code-row {
     display: flex;
@@ -425,28 +360,26 @@ body {
         min-width: 90px;
         white-space: nowrap;
     }
-.checkout-wrapper .row.align-items-start {
-    align-items: flex-start !important;
+
+/* Responsive */
+@media (max-width: 992px) {
+    .benefits-grid,
+    .details-info-grid,
+    .related-products-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.checkout-summary-box {
-    background: #f8f9fb;
-    border: 1px solid #e9ecef;
-    border-radius: 16px;
-    padding: 18px;
-}
-
-.promo-code-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-    .promo-code-row .form-control {
-        flex: 1;
+@media (max-width: 991px) {
+    .checkout-wrapper {
+        padding: 20px;
     }
 
-    .promo-code-row .btn {
-        min-width: 90px;
-        white-space: nowrap;
+        .checkout-wrapper h2 {
+            font-size: 26px;
+        }
+
+    .checkout-summary-box {
+        margin-top: 20px;
     }
+}
