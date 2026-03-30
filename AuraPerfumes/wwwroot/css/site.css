@@ -1,0 +1,452 @@
+﻿.details-image {
+    max-height: 520px;
+    object-fit: contain;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.price-box {
+    display: inline-block;
+    padding: 16px 22px;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    background: #fafafa;
+    min-width: 180px;
+}
+
+.price-label {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 4px;
+}
+
+.price-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: #212529;
+}
+
+.variant-label {
+    min-width: 90px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.perfume-description {
+    line-height: 1.8;
+    color: #333;
+}
+.description-box {
+    max-width: 720px;
+}
+
+.description-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #212529;
+}
+
+.perfume-description {
+    line-height: 1.9;
+    color: #4b5563;
+    font-size: 15px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+    .perfume-description.collapsed {
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+.description-toggle {
+    text-decoration: none;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+    .description-toggle:hover {
+        text-decoration: underline;
+    }
+
+.info-box {
+    background: #f9fafb;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.8;
+    max-width: 260px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+}
+.details-bottom-section {
+    margin-top: 60px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1f2937;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.benefit-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+}
+
+.benefit-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.benefit-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #212529;
+}
+
+.benefit-text {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.7;
+}
+
+.details-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.details-info-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+}
+
+.details-info-label {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.details-info-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.related-products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.related-product-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+}
+
+.related-product-image-placeholder {
+    height: 160px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.related-product-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #212529;
+}
+
+.related-product-text {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.7;
+}
+@media (max-width: 992px) {
+    .benefits-grid,
+    .details-info-grid,
+    .related-products-grid {
+        grid-template-columns: 1fr;
+    }
+}
+body {
+    background: linear-gradient(135deg, #eef2f7, #dfe6ed);
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+.related-products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.related-card {
+    display: block;
+    background: white;
+    border-radius: 16px;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+    .related-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+.related-img {
+    max-height: 150px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.related-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.related-price {
+    color: #2c7a7b;
+    font-weight: bold;
+}
+.checkout-wrapper,
+.order-success-box {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.checkout-total {
+    font-size: 24px;
+    font-weight: 700;
+}
+.checkout-wrapper {
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+    .checkout-wrapper h2 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: #1f2937;
+    }
+
+    .checkout-wrapper .table {
+        background: white;
+        border-radius: 18px;
+        overflow: hidden;
+        margin-bottom: 0;
+    }
+
+        .checkout-wrapper .table thead th {
+            background: #f3f4f6;
+            color: #374151;
+            font-weight: 700;
+            border-bottom: none;
+            padding: 16px 14px;
+            font-size: 14px;
+        }
+
+        .checkout-wrapper .table tbody td {
+            vertical-align: middle;
+            padding: 18px 14px;
+            border-color: #eef0f3;
+            font-size: 15px;
+            color: #1f2937;
+        }
+
+        .checkout-wrapper .table tbody tr:hover {
+            background: #fafbfc;
+        }
+
+    .checkout-wrapper small {
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .checkout-wrapper .form-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    .checkout-wrapper .form-select,
+    .checkout-wrapper .form-control {
+        border-radius: 14px;
+        padding: 12px 14px;
+        border: 1px solid #dbe1e8;
+        box-shadow: none;
+        font-size: 15px;
+    }
+
+        .checkout-wrapper .form-select:focus,
+        .checkout-wrapper .form-control:focus {
+            border-color: #94a3b8;
+            box-shadow: 0 0 0 0.15rem rgba(148, 163, 184, 0.2);
+        }
+
+.checkout-summary-box {
+    background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+
+    .checkout-summary-box span {
+        color: #4b5563;
+        font-size: 15px;
+    }
+
+    .checkout-summary-box strong {
+        color: #111827;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .checkout-summary-box hr {
+        margin: 14px 0;
+        border-color: #dbe1e8;
+    }
+
+#grandTotalText {
+    font-size: 22px;
+    color: #111827;
+}
+
+.checkout-wrapper .btn-dark {
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.checkout-wrapper .btn-outline-secondary {
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+@media (max-width: 991px) {
+    .checkout-wrapper {
+        padding: 20px;
+    }
+
+        .checkout-wrapper h2 {
+            font-size: 26px;
+        }
+
+    .checkout-summary-box {
+        margin-top: 20px;
+    }
+}
+body {
+    background: linear-gradient(135deg, #eef2f7, #dfe6ed);
+}
+.checkout-wrapper .table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+#cardFields {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+    #cardFields input {
+        background: white;
+    }
+
+.checkout-summary-box {
+    margin-top: 12px;
+}
+
+.promo-code-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+    .promo-code-row .form-control {
+        flex: 1;
+    }
+
+    .promo-code-row .btn {
+        min-width: 90px;
+        white-space: nowrap;
+    }
+.checkout-wrapper .row.align-items-start {
+    align-items: flex-start !important;
+}
+
+.checkout-summary-box {
+    background: #f8f9fb;
+    border: 1px solid #e9ecef;
+    border-radius: 16px;
+    padding: 18px;
+}
+
+.promo-code-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+    .promo-code-row .form-control {
+        flex: 1;
+    }
+
+    .promo-code-row .btn {
+        min-width: 90px;
+        white-space: nowrap;
+    }

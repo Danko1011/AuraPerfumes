@@ -6,5 +6,6 @@
         Task<IEnumerable<Gender>> Genders();
         Task<IEnumerable<string>> Designers();
         Task<Perfume?> GetPerfumeDetails(int id);
+        Task<List<Perfume>> GetRelatedPerfumes(int genderId, int excludeId);
     }
 }

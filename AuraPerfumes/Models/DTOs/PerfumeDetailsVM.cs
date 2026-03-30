@@ -6,5 +6,6 @@ namespace AuraPerfumes.Models.DTOs
     {
         public Perfume Perfume { get; set; } = null!;
         public int SelectedVariantId { get; set; }
+        public List<Perfume> RelatedPerfumes { get; set; } = new();
     }
 }

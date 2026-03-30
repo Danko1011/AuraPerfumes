@@ -19,7 +19,7 @@ namespace AuraPerfumes.Models
         public string? Image { get; set; }
         [Required]
         public int GenderId { get; set; }
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         public List<OrderDetail> OrderDetail { get; set; }
         public List<CartDetail> CartDetail { get; set; }
 

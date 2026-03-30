@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Order Success";
+}
+
+<div class="container mt-5">
+    <div class="order-success-box text-center">
+        <h2 class="mb-3">Order placed successfully</h2>
+        <p class="mb-2">Thank you for your order.</p>
+        <p class="mb-2"><strong>Order Number:</strong> #@ViewBag.OrderId</p>
+        <p class="mb-4"><strong>Total:</strong> @(((double)ViewBag.Total).ToString("0.00")) €</p>
+
+        <a asp-controller="Home" asp-action="Index" class="btn btn-dark">Continue Shopping</a>
+    </div>
+</div>

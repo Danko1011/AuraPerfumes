@@ -16,5 +16,6 @@ namespace AuraPerfumes.Models
         public Perfume Perfume { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
         public int VariantId { get; set; }
+        public PerfumeVariant Variant { get; set; }
     }
 }

@@ -12,19 +12,29 @@
 
 <div class="row g-4">
     <div class="col-md-5">
-        <img src="@imgSrc" class="img-fluid rounded" alt="@p.PerfumeModel" />
+        <img src="@imgSrc" class="img-fluid rounded details-image" alt="@p.PerfumeModel" />
     </div>
 
     <div class="col-md-7">
         <h2>@p.PerfumeModel</h2>
 
-        <div class="text-muted mb-2">
-            Designer: @p.PerfumeName • Gender: @p.GenderName
-        </div>
 
-        <p class="mb-3">
-            @(string.IsNullOrWhiteSpace(p.Description) ? "No description yet." : p.Description)
-        </p>
+        <div class="mb-4">
+            <div class="description-box">
+                <h5 class="description-title">About this fragrance</h5>
+
+                <p class="perfume-description collapsed" id="perfumeDescription">
+                    @(string.IsNullOrWhiteSpace(p.Description) ? "No description yet." : p.Description)
+                </p>
+
+                @if (!string.IsNullOrWhiteSpace(p.Description) && p.Description.Length > 220)
+                {
+                    <button type="button" class="btn btn-link description-toggle px-0" id="toggleDescriptionBtn">
+                        Read more
+                    </button>
+                }
+            </div>
+        </div>
 
         <div class="mb-3">
             <label class="form-label fw-semibold">Choose size</label>
@@ -48,24 +58,30 @@
                                autocomplete="off"
                                @(isChecked ? "checked" : "") />
 
-                        <label class="btn btn-outline-primary" for="v_@v.Id">
+                        <label class="btn btn-outline-dark variant-label" for="v_@v.Id">
                             @v.Ml ml
                         </label>
                     }
                 </div>
 
-                <div class="mt-3">
-                    <h4 class="mb-3">
-                        Price: <span id="priceText">@(selected?.Price.ToString() ?? "-")</span>
-                    </h4>
-
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-primary" type="button" onclick="addToCartFromDetails(@p.Id)">
-                            Add to cart
-                        </button>
-                        <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Back</a>
+                <div class="mt-4">
+                    <div class="price-box">
+                        <div class="price-label">Price</div>
+                        <div class="price-value">
+                            <span id="priceText">@(selected?.Price.ToString("0.00") ?? "-")</span> €
+                        </div>
                     </div>
                 </div>
+
+                
+
+                <div class="d-flex gap-2 mt-3">
+                    <button class="btn btn-dark px-4" type="button" onclick="addToCartFromDetails(@p.Id)">
+                        Add to cart
+                    </button>
+                    <a class="btn btn-outline-secondary px-4" asp-controller="Home" asp-action="Index">Back</a>
+                </div>
+                
             }
             else
             {
@@ -86,6 +102,94 @@
     </div>
 </div>
 
+<div class="details-bottom-section mt-5">
+
+    <div class="shop-benefits mb-5">
+        <div class="section-title">Why shop with us</div>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">✔</div>
+                <div class="benefit-title">100% Original fragrances</div>
+                <div class="benefit-text">All perfumes are original and carefully selected.</div>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">🚚</div>
+                <div class="benefit-title">Fast Delivery</div>
+                <div class="benefit-text">Quick and secure shipping for all orders.</div>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">🔒</div>
+                <div class="benefit-title">Safe and secure Checkout</div>
+                <div class="benefit-text">Safe payment and protected customer data.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-extra-info mb-5">
+        <div class="section-title">Product details</div>
+
+        <div class="details-info-grid">
+            <div class="details-info-card">
+                <div class="details-info-label">Designer</div>
+                <div class="details-info-value">@p.PerfumeName</div>
+            </div>
+
+            <div class="details-info-card">
+                <div class="details-info-label">Model</div>
+                <div class="details-info-value">@p.PerfumeModel</div>
+            </div>
+
+            <div class="details-info-card">
+                <div class="details-info-label">Gender</div>
+                <div class="details-info-value">
+                    @(p.Gender != null ? p.Gender.GenderLabel : "—")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="related-products-section mb-4">
+        <div class="related-products-section mt-5">
+            <div class="section-title">You may also like</div>
+
+            <div class="related-products-grid">
+                @foreach (var item in Model.RelatedPerfumes)
+                {
+                    var img = string.IsNullOrEmpty(item.Image)
+                    ? Url.Content("~/images/proba.png")
+                    : item.Image;
+
+                    var price = item.Variants?.FirstOrDefault()?.Price ?? 0;
+
+                    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="related-card">
+
+                        <img src="@img" class="related-img" />
+
+                        <div class="related-name">@item.PerfumeModel</div>
+
+                        <div class="related-price">
+                            @price.ToString("0.00") €
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="related-products-grid">
+            <div class="related-product-card">
+                <div class="related-product-image-placeholder">Perfume</div>
+                <div class="related-product-name">More fragrances coming soon</div>
+                <div class="related-product-text">You can later connect this to real products from your database.</div>
+            </div>
+
+            
+        </div>
+        
+    </div>
+
+</div>
 @section Scripts {
     <script>
         function getSelectedVariantId() {
@@ -94,14 +198,16 @@
         }
 
         function updatePriceFromSelected() {
-          const checked = document.querySelector('input[name="variantId"]:checked');
-          const priceText = document.getElementById('priceText');
-          if (!checked) {
-            priceText.innerText = "-";
-            return;
-          }
-          const price = checked.getAttribute('data-price');
-          priceText.innerText = price;
+            const checked = document.querySelector('input[name="variantId"]:checked');
+            const priceText = document.getElementById('priceText');
+
+            if (!checked) {
+                priceText.innerText = "-";
+                return;
+            }
+
+            const price = parseFloat(checked.getAttribute('data-price'));
+            priceText.innerText = price.toFixed(2);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -111,24 +217,36 @@
           });
         });
 
-        async function addToCartFromDetails(perfumeId) {
-          const variantId = getSelectedVariantId();
-          if (!variantId) {
-            alert("Please choose a size.");
-            return;
-          }
+            async function addToCartFromDetails(perfumeId) {
+            const variantId = getSelectedVariantId();
+            if (!variantId) {
+                alert("Please choose a size.");
+                return;
+            }
+            const url = `/Cart/AddItem?perfumeId=${perfumeId}&variantId=${variantId}&qty=1&redirect=0`;
+            const response = await fetch(url);
+            if (response.ok) {
+                const count = await response.json();
+                const el = document.getElementById("cartCount");
+                if (el) el.innerText = count;
+                alert("Added!");
+            } else {
+                alert("Error adding to cart");
+            }
+        }
+        const toggleDescriptionBtn = document.getElementById('toggleDescriptionBtn');
+        const perfumeDescription = document.getElementById('perfumeDescription');
 
-          const url = `/Cart/AddItem?perfumeId=${perfumeId}&variantId=${variantId}&qty=1&redirect=0`;
-          const response = await fetch(url);
+        if (toggleDescriptionBtn && perfumeDescription) {
+            toggleDescriptionBtn.addEventListener('click', function () {
+                perfumeDescription.classList.toggle('collapsed');
 
-          if (response.ok) {
-            const count = await response.json();
-            const el = document.getElementById("cartCount");
-            if (el) el.innerText = count;
-            alert("Added!");
-          } else {
-            alert("Error adding to cart");
-          }
+                if (perfumeDescription.classList.contains('collapsed')) {
+                    toggleDescriptionBtn.textContent = 'Read more';
+                } else {
+                    toggleDescriptionBtn.textContent = 'Read less';
+                }
+            });
         }
     </script>
 }

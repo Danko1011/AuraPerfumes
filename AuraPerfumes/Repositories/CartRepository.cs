@@ -16,7 +16,7 @@ namespace AuraPerfumes.Repositories
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<int>AddItem(int perfumeId, int qty,string userId)
+        public async Task<int> AddItem(int perfumeId, int variantId, int qty, string userId)
         {
             
             using var transaction = _db.Database.BeginTransaction();
@@ -34,9 +34,12 @@ namespace AuraPerfumes.Repositories
                         UserId = userId
                     };
                     _db.ShoppingCarts.Add(cart);
+                    _db.SaveChanges();
                 }
-                _db.SaveChanges();
-                var cartItem = _db.CartDetails.FirstOrDefault(a=>a.ShoppingCartId == cart.Id && a.PerfumeId == perfumeId);
+                var cartItem = _db.CartDetails.FirstOrDefault(a =>
+                    a.ShoppingCartId == cart.Id &&
+                    a.PerfumeId == perfumeId &&
+                    a.VariantId == variantId);
                 if (cartItem is not null)
                 {
                     cartItem.Quantity += qty;
@@ -47,6 +50,7 @@ namespace AuraPerfumes.Repositories
                     cartItem = new CartDetail
                     {
                         PerfumeId = perfumeId,
+                        VariantId = variantId,
                         Quantity = qty,
                         ShoppingCartId = cart.Id
                     };
@@ -107,10 +111,13 @@ namespace AuraPerfumes.Repositories
             if (userId == null)
                 throw new Exception("Invalid userid");
             var shoppingCart = await _db.ShoppingCarts
-                .Include(a=>a.CartDetails)
-                .ThenInclude(a=>a.Perfume)
-                .ThenInclude(a=> a.Gender)
-                .Where(a=>a.UserId == userId).FirstOrDefaultAsync();
+                .Include(a => a.CartDetails)
+                .ThenInclude(a => a.Perfume)
+                .ThenInclude(a => a.Gender)
+                .Include(a => a.CartDetails)
+                .ThenInclude(a => a.Variant)
+                .Where(a => a.UserId == userId)
+                .FirstOrDefaultAsync();
             return shoppingCart;
         }
 

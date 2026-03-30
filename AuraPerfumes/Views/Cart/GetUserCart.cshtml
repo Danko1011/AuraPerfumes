@@ -14,14 +14,20 @@
                 <th>Perfume</th>
                 <th>Image</th>
                 <th>Gender</th>
-                <th>Militre Price</th>
+                <th>Size</th>
+                <th>Unit Price</th>
                 <th>Qty</th>
-                <th>Total Price</th>
+                <th>Total</th>
+                <th></th>
             </tr>
             @foreach (var item in Model.CartDetails)
             {
                 <tr>
-                    <td>@item.Perfume.PerfumeName</td>
+                    <td>
+                        <strong>@item.Perfume.PerfumeModel</strong><br />
+                        <small>@item.Perfume.PerfumeName</small>
+                    </td>
+
                     <td>
                         @if (string.IsNullOrEmpty(item.Perfume.Image))
                         {
@@ -32,23 +38,27 @@
                             <img src="@item.Perfume.Image" style="width:80px;height:100px;object-fit:cover;" />
                         }
                     </td>
-                    <td>@item.Perfume.Gender.GenderLabel    </td>
-                    <td>@item.Perfume.Price X @item.Quantity</td>
-                    <td>@(item.Perfume.Price*item.Quantity)</td>
+
+                    <td>@item.Perfume.Gender.GenderLabel</td>
+                    <td>@item.Variant.Ml ml</td>
+                    <td>@item.Variant.Price.ToString("0.00") €</td>
+                    <td>@item.Quantity</td>
+                    <td>@((item.Variant.Price * item.Quantity).ToString("0.00")) €</td>
+
                     <td>
-                        <a class="btn btn-info" href="/Cart/AddItem?perfumeId=@item.PerfumeId&&redirect=1">+</a>
-                        <a class="btn btn-info" href="/Cart/RemoveItem?perfumeId=@item.PerfumeId&variantId=@item.VariantId">-</a>
+                        <a class="btn btn-sm btn-info" href="/Cart/AddItem?perfumeId=@item.PerfumeId&variantId=@item.VariantId&redirect=1">+</a>
+                        <a class="btn btn-sm btn-info" href="/Cart/RemoveItem?perfumeId=@item.PerfumeId&variantId=@item.VariantId">-</a>
                     </td>
                 </tr>
             }
         </table>
         <div class="my-2">
-            <h5>Total(INR): </h5>
-            @(Model.CartDetails.Select(item=>item.Perfume.Price*item.Quantity).Sum())
+            <h5>Grand Total:</h5>
+            @Model.CartDetails.Select(item => item.Variant.Price * item.Quantity).Sum().ToString("0.00") <span>€</span>
         </div>
 
         <div class="my-2">
-            <a class="btn btn-primary" href="#">Checkout</a>
+            <a class="btn btn-primary" asp-controller="Cart" asp-action="OrderInfo">Checkout</a>
         </div>
     }
     else

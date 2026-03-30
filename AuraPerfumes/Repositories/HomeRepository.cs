@@ -61,5 +61,13 @@ namespace AuraPerfumes.Repositories
                 .Include(p => p.Variants)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+        public async Task<List<Perfume>> GetRelatedPerfumes(int genderId, int excludeId)
+        {
+            return await _db.Perfumes
+                .Include(p => p.Variants)
+                .Where(p => p.GenderId == genderId && p.Id != excludeId)
+                .Take(3)
+                .ToListAsync();
+        }
     }
 }

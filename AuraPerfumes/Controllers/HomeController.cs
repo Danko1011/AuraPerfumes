@@ -43,7 +43,9 @@ namespace AuraPerfumes.Controllers
             {
                 Perfume = perfume,
                 SelectedVariantId = perfume.Variants.FirstOrDefault()?.Id ?? 0
+                
             };
+            vm.RelatedPerfumes = await _homeRepository.GetRelatedPerfumes(perfume.GenderId, perfume.Id);
 
             return View(vm);
         }

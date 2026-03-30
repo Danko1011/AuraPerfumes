@@ -1,0 +1,219 @@
+﻿@model AuraPerfumes.Models.DTOs.CheckoutVM
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container mt-4">
+    <div class="checkout-wrapper">
+        <h2 class="mb-4">Checkout</h2>
+
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Perfume</th>
+                            <th>Size</th>
+                            <th>Unit Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Cart.CartDetails)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@item.Perfume.PerfumeModel</strong><br />
+                                    <small>@item.Perfume.PerfumeName</small>
+                                </td>
+                                <td>@item.Variant.Ml ml</td>
+                                <td>@item.Variant.Price.ToString("0.00") €</td>
+                                <td>@item.Quantity</td>
+                                <td>@((item.Variant.Price * item.Quantity).ToString("0.00")) €</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-4">
+                <form asp-action="PlaceOrder" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="FirstName" />
+                    <input type="hidden" asp-for="LastName" />
+                    <input type="hidden" asp-for="PhoneNumber" />
+                    <input type="hidden" asp-for="Email" />
+                    <input type="hidden" asp-for="AddressLine" />
+                    <input type="hidden" asp-for="City" />
+                    <input type="hidden" asp-for="PostalCode" />
+                    <input type="hidden" asp-for="PaymentMethod" />
+                    <input type="hidden" asp-for="CourierName" />
+                    <input type="hidden" asp-for="Discount" />
+                    <input type="hidden" asp-for="PromoCode" />
+                    <input type="hidden" asp-for="CardHolderName" />
+                    <input type="hidden" asp-for="CardNumber" />
+                    <input type="hidden" asp-for="ExpiryDate" />
+                    <input type="hidden" asp-for="CVV" />
+
+                    <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
+                    <p><strong>Phone:</strong> @Model.PhoneNumber</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Address:</strong> @Model.AddressLine, @Model.City, @Model.PostalCode</p>
+                    <p><strong>Payment:</strong> @Model.PaymentMethod</p>
+                    <p><strong>Courier:</strong> @Model.CourierName</p>
+                    <p><strong>Promo Code:</strong> @(string.IsNullOrWhiteSpace(Model.PromoCode) ? "-" : Model.PromoCode)</p>
+                    <p><strong>Discount:</strong> @Model.Discount.ToString("0.00") €</p>
+
+                    <div class="mb-3">
+                        <label class="form-label">Courier</label>
+                        <select class="form-select" id="courierSelect" name="CourierName">
+                            <option value="Speedy" selected="@(Model.CourierName == "Speedy")">Speedy - 4.99 €</option>
+                            <option value="Econt" selected="@(Model.CourierName == "Econt")">Econt - 5.99 €</option>
+                            <option value="BoxNow" selected="@(Model.CourierName == "BoxNow")">BoxNow - 3.49 €</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Discount</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="discountInput" name="Discount" value="@Model.Discount" />
+                    </div>
+
+                    <div class="checkout-summary-box">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <strong id="subtotalText">@Model.Subtotal.ToString("0.00") €</strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Shipping:</span>
+                            <strong id="shippingText">@Model.ShippingPrice.ToString("0.00") €</strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Discount:</span>
+                            <strong id="discountText">@Model.Discount.ToString("0.00") €</strong>
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-between">
+                            <span>Grand Total:</span>
+                            <strong id="grandTotalText">@Model.GrandTotal.ToString("0.00") €</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select asp-for="PaymentMethod" class="form-select" id="paymentMethodSelect">
+                            <option value="CashOnDelivery">Cash on delivery</option>
+                            <option value="CardPayment">Card payment</option>
+                        </select>
+                    </div>
+
+                    <div id="cardFields" style="display:none;">
+                        <div class="mb-3">
+                            <label class="form-label">Card Holder Name</label>
+                            <input asp-for="CardHolderName" class="form-control" placeholder="John Doe" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Card Number</label>
+                            <input asp-for="CardNumber" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Expiry Date</label>
+                                <input asp-for="ExpiryDate" class="form-control" placeholder="MM/YY" maxlength="5" />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">CVV</label>
+                                <input asp-for="CVV" class="form-control" placeholder="123" maxlength="4" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100 mt-3">Place Order</button>
+                    <a asp-action="GetUserCart" class="btn btn-outline-secondary w-100 mt-2">Back to Cart</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const courierSelect = document.getElementById('courierSelect');
+        const discountInput = document.getElementById('discountInput');
+                const paymentMethodSelect = document.getElementById('paymentMethodSelect');
+        const cardFields = document.getElementById('cardFields');
+        const cardNumberInput = document.getElementById('CardNumber');
+        const expiryDateInput = document.getElementById('ExpiryDate');
+        const cvvInput = document.getElementById('CVV');
+        const subtotal = @Model.Subtotal.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+        function getCourierPrice(courier) {
+            switch (courier) {
+                case "Econt": return 5.99;
+                case "Speedy": return 4.99;
+                case "BoxNow": return 3.49;
+                default: return 4.99;
+            }
+        }
+
+        function recalculateCheckout() {
+            const courier = courierSelect.value;
+            const shipping = getCourierPrice(courier);
+            const discount = parseFloat(discountInput.value || "0");
+
+            let total = subtotal + shipping - discount;
+            if (total < 0) total = 0;
+
+            document.getElementById('shippingText').textContent = shipping.toFixed(2) + ' €';
+            document.getElementById('discountText').textContent = discount.toFixed(2) + ' €';
+            document.getElementById('grandTotalText').textContent = total.toFixed(2) + ' €';
+        }
+                function toggleCardFields() {
+            const selected = paymentMethodSelect.value;
+
+            if (selected === "CardPayment") {
+                cardFields.style.display = "block";
+            } else {
+                cardFields.style.display = "none";
+            }
+        }
+
+        courierSelect.addEventListener('change', recalculateCheckout);
+        discountInput.addEventListener('input', recalculateCheckout);
+
+                paymentMethodSelect.addEventListener('change', toggleCardFields);
+        toggleCardFields();
+                if (cardNumberInput) {
+            cardNumberInput.addEventListener('input', function () {
+                let value = this.value.replace(/\D/g, '').substring(0, 16);
+                value = value.replace(/(.{4})/g, '$1 ').trim();
+                this.value = value;
+            });
+        }
+
+        if (expiryDateInput) {
+            expiryDateInput.addEventListener('input', function () {
+                let value = this.value.replace(/\D/g, '').substring(0, 4);
+
+                if (value.length >= 3) {
+                    value = value.substring(0, 2) + '/' + value.substring(2);
+                }
+
+                this.value = value;
+            });
+        }
+
+        if (cvvInput) {
+            cvvInput.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, '').substring(0, 4);
+            });
+        }
+    </script>
+}

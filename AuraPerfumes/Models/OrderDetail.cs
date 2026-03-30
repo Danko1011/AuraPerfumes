@@ -15,6 +15,9 @@ namespace AuraPerfumes.Models
         public int Quantity { get; set; }
         [Required]
         public double MlPrice { get; set; }
+
+        public int VariantId { get; set; }
+        public int Ml { get; set; }
         public Order Order { get; set; }
         public Perfume Perfume { get; set; }
 
