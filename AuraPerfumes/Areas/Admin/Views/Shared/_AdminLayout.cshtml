@@ -1,0 +1,18 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="mb-4">
+        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-dark me-2">Dashboard</a>
+        <a asp-area="Admin" asp-controller="Perfumes" asp-action="Index" class="btn btn-outline-dark me-2">Perfumes</a>
+        <a asp-area="Admin" asp-controller="Orders" asp-action="Index" class="btn btn-outline-dark me-2">Orders</a>
+        <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-outline-dark me-2">Users</a>
+        <a asp-area="Admin" asp-controller="PromoCodes" asp-action="Index" class="btn btn-outline-dark me-2">Promo Codes</a>
+        <a asp-area="Admin" asp-controller="Reviews" asp-action="Index" class="btn btn-outline-dark">Reviews</a>
+    </div>
+
+    @RenderBody()
+</div>
+
+@await RenderSectionAsync("Scripts", required: false)

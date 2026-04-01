@@ -1,0 +1,72 @@
+﻿@model AuraPerfumes.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container mt-4">
+    <div class="checkout-wrapper">
+        <h2 class="mb-4">Order #@Model.Id</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Status:</strong> @Model.OrderStatus?.StatusName</p>
+                <p><strong>Shipping status:</strong> @Model.ShippingStatus</p>
+                <p><strong>Estimated delivery:</strong> @Model.EstimatedDeliveryDate.ToLocalTime().ToString("dd.MM.yyyy")</p>
+                <p><strong>Courier:</strong> @Model.CourierName</p>
+                <p><strong>Payment:</strong> @Model.PaymentMethod</p>
+            </div>
+
+            <div class="col-md-6">
+                <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
+                <p><strong>Phone:</strong> @Model.PhoneNumber</p>
+                <p><strong>Email:</strong> @Model.Email</p>
+                <p><strong>Address:</strong> @Model.AddressLine, @Model.City, @Model.PostalCode</p>
+            </div>
+        </div>
+
+        <hr />
+
+        <h4 class="mb-3">Products</h4>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Perfume</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>ML</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderDetail)
+                {
+                    <tr>
+                        <td>@item.Perfume?.PerfumeName</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.MlPrice.ToString("0.00") €</td>
+                        <td>@item.Ml ml</td>
+                        <td>@((item.MlPrice * item.Quantity).ToString("0.00")) €</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="checkout-summary-box mt-4">
+            <div class="d-flex justify-content-between mb-2">
+                <span>Shipping:</span>
+                <strong>@Model.ShippingPrice.ToString("0.00") €</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span>Discount:</span>
+                <strong>@Model.Discount.ToString("0.00") €</strong>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between">
+                <span>Total:</span>
+                <strong>@Model.TotalPrice.ToString("0.00") €</strong>
+            </div>
+        </div>
+    </div>
+</div>

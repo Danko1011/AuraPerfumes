@@ -4,12 +4,11 @@
 
 /* Layout */
 .container {
+    
     background: rgba(255, 255, 255, 0.9);
     border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 50px 50px rgba(0,0,0,0.05);
 }
-
 /* Details page */
 .details-image {
     max-height: 520px;
@@ -383,3 +382,4 @@
         margin-top: 20px;
     }
 }
+

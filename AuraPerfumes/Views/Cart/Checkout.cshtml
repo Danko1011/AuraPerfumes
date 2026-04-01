@@ -39,8 +39,11 @@
             </div>
 
             <div class="col-md-4">
-                <form asp-action="PlaceOrder" method="post">
+                <form asp-controller="Cart" asp-action="PlaceOrder" method="post">
                     @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
                     <input type="hidden" asp-for="FirstName" />
                     <input type="hidden" asp-for="LastName" />
                     <input type="hidden" asp-for="PhoneNumber" />
@@ -48,23 +51,11 @@
                     <input type="hidden" asp-for="AddressLine" />
                     <input type="hidden" asp-for="City" />
                     <input type="hidden" asp-for="PostalCode" />
-                    <input type="hidden" asp-for="PaymentMethod" />
-                    <input type="hidden" asp-for="CourierName" />
-                    <input type="hidden" asp-for="Discount" />
-                    <input type="hidden" asp-for="PromoCode" />
-                    <input type="hidden" asp-for="CardHolderName" />
-                    <input type="hidden" asp-for="CardNumber" />
-                    <input type="hidden" asp-for="ExpiryDate" />
-                    <input type="hidden" asp-for="CVV" />
 
                     <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
                     <p><strong>Phone:</strong> @Model.PhoneNumber</p>
                     <p><strong>Email:</strong> @Model.Email</p>
                     <p><strong>Address:</strong> @Model.AddressLine, @Model.City, @Model.PostalCode</p>
-                    <p><strong>Payment:</strong> @Model.PaymentMethod</p>
-                    <p><strong>Courier:</strong> @Model.CourierName</p>
-                    <p><strong>Promo Code:</strong> @(string.IsNullOrWhiteSpace(Model.PromoCode) ? "-" : Model.PromoCode)</p>
-                    <p><strong>Discount:</strong> @Model.Discount.ToString("0.00") €</p>
 
                     <div class="mb-3">
                         <label class="form-label">Courier</label>
@@ -76,8 +67,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Discount</label>
-                        <input type="number" step="0.01" min="0" class="form-control" id="discountInput" name="Discount" value="@Model.Discount" />
+                        <label class="form-label">Promo Code</label>
+                        <input asp-for="PromoCode" class="form-control" id="promoCodeInput" placeholder="Например: AURA10" />
                     </div>
 
                     <div class="checkout-summary-box">
@@ -103,7 +94,8 @@
                             <strong id="grandTotalText">@Model.GrandTotal.ToString("0.00") €</strong>
                         </div>
                     </div>
-                    <div class="mb-3">
+
+                    <div class="mb-3 mt-3">
                         <label class="form-label">Payment Method</label>
                         <select asp-for="PaymentMethod" class="form-select" id="paymentMethodSelect">
                             <option value="CashOnDelivery">Cash on delivery</option>
@@ -135,8 +127,21 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-dark w-100 mt-3">Place Order</button>
-                    <a asp-action="GetUserCart" class="btn btn-outline-secondary w-100 mt-2">Back to Cart</a>
+                    @if (ViewBag.DebugErrors != null)
+                    {
+                        <div class="alert alert-danger">
+                            @foreach (string err in ViewBag.DebugErrors)
+                            {
+                                <div>@err</div>
+                            }
+                        </div>
+                    }
+
+                    <button type="submit" class="btn btn-dark w-100 mt-3">Buy</button>
+
+                    <a asp-controller="Cart" asp-action="OrderInfo" class="btn btn-outline-secondary w-100 mt-2">
+                        Back to Review Order
+                    </a>
                 </form>
             </div>
         </div>
@@ -144,10 +149,11 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
         const courierSelect = document.getElementById('courierSelect');
-        const discountInput = document.getElementById('discountInput');
-                const paymentMethodSelect = document.getElementById('paymentMethodSelect');
+        const promoCodeInput = document.getElementById('promoCodeInput');
+        const paymentMethodSelect = document.getElementById('paymentMethodSelect');
         const cardFields = document.getElementById('cardFields');
         const cardNumberInput = document.getElementById('CardNumber');
         const expiryDateInput = document.getElementById('ExpiryDate');
@@ -163,10 +169,25 @@
             }
         }
 
+        function getPromoDiscount(code, subtotalValue) {
+            if (!code) return 0;
+
+            code = code.trim().toUpperCase();
+
+            switch (code) {
+                case "AURA10": return subtotalValue * 0.10;
+                case "AURA20": return subtotalValue * 0.20;
+                case "WELCOME5": return 5.00;
+                case "FREE15": return 15.00;
+                default: return 0;
+            }
+        }
+
         function recalculateCheckout() {
             const courier = courierSelect.value;
             const shipping = getCourierPrice(courier);
-            const discount = parseFloat(discountInput.value || "0");
+            const promoCode = promoCodeInput.value;
+            const discount = getPromoDiscount(promoCode, subtotal);
 
             let total = subtotal + shipping - discount;
             if (total < 0) total = 0;
@@ -175,7 +196,8 @@
             document.getElementById('discountText').textContent = discount.toFixed(2) + ' €';
             document.getElementById('grandTotalText').textContent = total.toFixed(2) + ' €';
         }
-                function toggleCardFields() {
+
+        function toggleCardFields() {
             const selected = paymentMethodSelect.value;
 
             if (selected === "CardPayment") {
@@ -186,11 +208,12 @@
         }
 
         courierSelect.addEventListener('change', recalculateCheckout);
-        discountInput.addEventListener('input', recalculateCheckout);
+        promoCodeInput.addEventListener('input', recalculateCheckout);
 
-                paymentMethodSelect.addEventListener('change', toggleCardFields);
+        paymentMethodSelect.addEventListener('change', toggleCardFields);
         toggleCardFields();
-                if (cardNumberInput) {
+
+        if (cardNumberInput) {
             cardNumberInput.addEventListener('input', function () {
                 let value = this.value.replace(/\D/g, '').substring(0, 16);
                 value = value.replace(/(.{4})/g, '$1 ').trim();
@@ -215,5 +238,7 @@
                 this.value = this.value.replace(/\D/g, '').substring(0, 4);
             });
         }
+
+        recalculateCheckout();
     </script>
 }

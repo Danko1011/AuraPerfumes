@@ -33,6 +33,9 @@ namespace AuraPerfumes.Models
         public double Discount { get; set; }
         public double TotalPrice { get; set; }
 
+        public string ShippingStatus { get; set; } = "Processing";
+        public DateTime EstimatedDeliveryDate { get; set; }
+
         public OrderStatus OrderStatus { get; set; }
         public List<OrderDetail> OrderDetail { get; set; }
     }

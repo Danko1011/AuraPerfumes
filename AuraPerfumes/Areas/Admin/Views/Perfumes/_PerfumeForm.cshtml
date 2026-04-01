@@ -1,0 +1,35 @@
+﻿@model AuraPerfumes.Models.Perfume
+
+<div class="mb-3">
+    <label asp-for="PerfumeName" class="form-label">Perfume Name</label>
+    <input asp-for="PerfumeName" class="form-control" />
+    <span asp-validation-for="PerfumeName" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="PerfumeModel" class="form-label">Perfume Model</label>
+    <input asp-for="PerfumeModel" class="form-control" />
+    <span asp-validation-for="PerfumeModel" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Price" class="form-label">Base Price</label>
+    <input asp-for="Price" class="form-control" />
+    <span asp-validation-for="Price" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="GenderId" class="form-label">Gender</label>
+    <select asp-for="GenderId" asp-items="ViewBag.Genders" class="form-select"></select>
+    <span asp-validation-for="GenderId" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Description" class="form-label">Description</label>
+    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Image</label>
+    <input type="file" name="imageFile" class="form-control" />
+</div>

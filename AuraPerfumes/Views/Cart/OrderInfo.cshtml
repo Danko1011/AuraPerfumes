@@ -8,233 +8,66 @@
     <div class="checkout-wrapper">
         <h2 class="mb-4">Order Information</h2>
 
-        <form asp-action="Checkout" method="post">
+        <form asp-controller="Cart" asp-action="Checkout" method="post">
             @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
             <div class="row">
                 <div class="col-md-8">
-                    <div class="row align-items-start">
-                        <div class="col-md-8">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="FirstName" class="form-label">First Name</label>
-                                    <input asp-for="FirstName" class="form-control" />
-                                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="LastName" class="form-label">Last Name</label>
-                                    <input asp-for="LastName" class="form-control" />
-                                    <span asp-validation-for="LastName" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
-                                <input asp-for="PhoneNumber" class="form-control" />
-                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="Email" class="form-label">Email</label>
-                                <input asp-for="Email" class="form-control" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="AddressLine" class="form-label">Address</label>
-                                <input asp-for="AddressLine" class="form-control" />
-                                <span asp-validation-for="AddressLine" class="text-danger"></span>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="City" class="form-label">City</label>
-                                    <input asp-for="City" class="form-control" />
-                                    <span asp-validation-for="City" class="text-danger"></span>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="PostalCode" class="form-label">Postal Code</label>
-                                    <input asp-for="PostalCode" class="form-control" />
-                                    <span asp-validation-for="PostalCode" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="PaymentMethod" class="form-label">Payment Method</label>
-                                <select asp-for="PaymentMethod" class="form-select" id="paymentMethodSelect">
-                                    <option value="CashOnDelivery">Cash on delivery</option>
-                                    <option value="CardPayment">Card payment</option>
-                                </select>
-                                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
-                            </div>
-
-                            <div id="cardFields" style="display:none;">
-                                <div class="mb-3">
-                                    <label asp-for="CardHolderName" class="form-label">Card Holder Name</label>
-                                    <input asp-for="CardHolderName" class="form-control" />
-                                    <span asp-validation-for="CardHolderName" class="text-danger"></span>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label asp-for="CardNumber" class="form-label">Card Number</label>
-                                    <input asp-for="CardNumber" class="form-control" maxlength="19" />
-                                    <span asp-validation-for="CardNumber" class="text-danger"></span>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label asp-for="ExpiryDate" class="form-label">Expiry Date</label>
-                                        <input asp-for="ExpiryDate" class="form-control" maxlength="5" />
-                                        <span asp-validation-for="ExpiryDate" class="text-danger"></span>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label asp-for="CVV" class="form-label">CVV</label>
-                                        <input asp-for="CVV" class="form-control" maxlength="4" />
-                                        <span asp-validation-for="CVV" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="CourierName" class="form-label">Courier</label>
-                                <select asp-for="CourierName" class="form-select" id="courierSelect">
-                                    <option value="Speedy">Speedy - 4.99 €</option>
-                                    <option value="Econt">Econt - 5.99 €</option>
-                                    <option value="BoxNow">BoxNow - 3.49 €</option>
-                                </select>
-                            </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FirstName" class="form-label">First Name</label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label asp-for="PromoCode" class="form-label">Promo Code</label>
-                                <div class="promo-code-row">
-                                    <input asp-for="PromoCode" class="form-control" id="promoCodeInput" placeholder="Например: AURA10" />
-                                    <button type="button" class="btn btn-dark" id="applyPromoBtn">Apply</button>
-                                </div>
-                            </div>
-
-                            <div class="checkout-summary-box">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Promo Discount:</span>
-                                    <strong id="promoDiscountText">@Model.Discount.ToString("0.00") €</strong>
-                                </div>
-
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Subtotal:</span>
-                                    <strong id="subtotalText">@Model.Subtotal.ToString("0.00") €</strong>
-                                </div>
-
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Shipping:</span>
-                                    <strong id="shippingText">@Model.ShippingPrice.ToString("0.00") €</strong>
-                                </div>
-
-                                <hr />
-
-                                <div class="d-flex justify-content-between">
-                                    <span>Total:</span>
-                                    <strong id="grandTotalText">@Model.GrandTotal.ToString("0.00") €</strong>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn btn-dark w-100 mt-3">Continue to Review Order</button>
-                            
-                                
-                               
-                                    <a href="/Cart/GetUserCart" class="btn btn-outline-secondary w-100 mt-3">Back to Cart</a>
-                                
-                            
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LastName" class="form-label">Last Name</label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
                     </div>
-                </form>
-        
-                     
-              </div>
-         </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="AddressLine" class="form-label">Address</label>
+                        <input asp-for="AddressLine" class="form-control" />
+                        <span asp-validation-for="AddressLine" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="City" class="form-label">City</label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PostalCode" class="form-label">Postal Code</label>
+                            <input asp-for="PostalCode" class="form-control" />
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100 mt-3">Continue to Checkout</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        const paymentMethodSelect = document.getElementById('paymentMethodSelect');
-        const cardFields = document.getElementById('cardFields');
-            const promoCodeInput = document.getElementById('promoCodeInput');
-        const applyPromoBtn = document.getElementById('applyPromoBtn');
-        const courierSelect = document.getElementById('courierSelect');
-
-        const subtotal = @Model.Subtotal.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-
-        function toggleCardFields() {
-            if (paymentMethodSelect.value === "CardPayment") {
-                cardFields.style.display = "block";
-            } else {
-                cardFields.style.display = "none";
-            }
-        }
-
-            function getCourierPrice(courier) {
-            switch (courier) {
-                case "Econt": return 5.99;
-                case "Speedy": return 4.99;
-                case "BoxNow": return 3.49;
-                default: return 4.99;
-            }
-        }
-
-        function getPromoDiscount(code, subtotalValue) {
-            if (!code) return 0;
-
-            code = code.trim().toUpperCase();
-
-            switch (code) {
-                case "AURA10": return subtotalValue * 0.10;
-                case "AURA20": return subtotalValue * 0.20;
-                case "WELCOME5": return 5.00;
-                case "FREE15": return 15.00;
-                default: return 0;
-            }
-        }
-
-        function recalculateOrderInfo() {
-            const courier = courierSelect.value;
-            const shipping = getCourierPrice(courier);
-            const promoCode = promoCodeInput.value;
-            const discount = getPromoDiscount(promoCode, subtotal);
-
-            let total = subtotal + shipping - discount;
-            if (total < 0) total = 0;
-
-            document.getElementById('promoDiscountText').textContent = discount.toFixed(2) + ' €';
-            document.getElementById('shippingText').textContent = shipping.toFixed(2) + ' €';
-            document.getElementById('grandTotalText').textContent = total.toFixed(2) + ' €';
-        }
-
-        if (applyPromoBtn) {
-            applyPromoBtn.addEventListener('click', function () {
-                recalculateOrderInfo();
-            });
-        }
-
-        if (promoCodeInput) {
-            promoCodeInput.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    recalculateOrderInfo();
-                }
-            });
-        }
-
-        if (courierSelect) {
-            courierSelect.addEventListener('change', recalculateOrderInfo);
-        }
-
-        recalculateOrderInfo();
-        paymentMethodSelect.addEventListener("change", toggleCardFields);
-        toggleCardFields();
-    </script>
 }

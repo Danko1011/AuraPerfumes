@@ -1,0 +1,59 @@
+﻿@model AuraPerfumes.Models.Perfume
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Manage Variants";
+}
+
+<div class="container mt-4">
+    <div class="checkout-wrapper">
+        <h2 class="mb-4">Variants for @Model.PerfumeName - @Model.PerfumeModel</h2>
+
+        <form asp-area="Admin" asp-controller="PerfumeVariants" asp-action="Add" method="post" class="mb-4">
+            <input type="hidden" name="PerfumeId" value="@Model.Id" />
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">ML</label>
+                    <input name="Ml" class="form-control" type="number" min="1" required />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Price</label>
+                    <input name="Price" class="form-control" type="number" step="0.01" min="0.01" required />
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-dark w-100">Add Variant</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ML</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var variant in Model.Variants)
+                {
+                    <tr>
+                        <td>@variant.Ml ml</td>
+                        <td>@variant.Price.ToString("0.00") €</td>
+                        <td>
+                            <form asp-area="Admin" asp-controller="PerfumeVariants" asp-action="Delete" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@variant.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <a href="/Admin/Perfumes" class="btn btn-outline-secondary">Back to Perfumes</a>
+    </div>
+</div>

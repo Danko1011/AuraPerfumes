@@ -1,11 +1,13 @@
 ﻿using AuraPerfumes.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace AuraPerfumes.Models.DTOs
 {
     public class CheckoutVM
     {
-        public ShoppingCart Cart { get; set; } = null!;
+        [ValidateNever]
+        public ShoppingCart? Cart { get; set; }
 
         [Required]
         public string CourierName { get; set; } = "Speedy";
@@ -42,10 +44,10 @@ namespace AuraPerfumes.Models.DTOs
 
         [Required]
         public string PaymentMethod { get; set; } = "CashOnDelivery";
-        public string PromoCode { get; set; } = "";
-        public string CardHolderName { get; set; } = "";
-        public string CardNumber { get; set; } = "";
-        public string ExpiryDate { get; set; } = "";
-        public string CVV { get; set; } = "";
+        public string? PromoCode { get; set; }
+        public string? CardHolderName { get; set; }
+        public string? CardNumber { get; set; }
+        public string? ExpiryDate { get; set; }
+        public string? CVV { get; set; }
     }
 }

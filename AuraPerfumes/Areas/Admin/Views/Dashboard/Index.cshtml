@@ -1,0 +1,66 @@
+﻿@model IEnumerable<AuraPerfumes.Models.Order>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="checkout-summary-box">
+                <h5>Perfumes</h5>
+                <h3>@ViewBag.PerfumesCount</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="checkout-summary-box">
+                <h5>Orders</h5>
+                <h3>@ViewBag.OrdersCount</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="checkout-summary-box">
+                <h5>Users</h5>
+                <h3>@ViewBag.UsersCount</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="checkout-summary-box">
+                <h5>Total Sales</h5>
+                <h3>@ViewBag.TotalSales.ToString("0.00") €</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-wrapper">
+        <h4 class="mb-3">Latest Orders</h4>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>#@order.Id</td>
+                        <td>@order.CreateDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@order.TotalPrice.ToString("0.00") €</td>
+                        <td>@order.OrderStatus?.StatusName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

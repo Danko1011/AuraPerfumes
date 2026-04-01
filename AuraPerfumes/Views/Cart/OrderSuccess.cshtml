@@ -1,14 +1,62 @@
-﻿@{
+﻿@model AuraPerfumes.Models.Order
+
+@{
     ViewData["Title"] = "Order Success";
 }
 
-<div class="container mt-5">
-    <div class="order-success-box text-center">
-        <h2 class="mb-3">Order placed successfully</h2>
-        <p class="mb-2">Thank you for your order.</p>
-        <p class="mb-2"><strong>Order Number:</strong> #@ViewBag.OrderId</p>
-        <p class="mb-4"><strong>Total:</strong> @(((double)ViewBag.Total).ToString("0.00")) €</p>
+<div class="container mt-4">
+    <div class="order-success-box">
+        <h2 class="mb-3">Thank you for your order!</h2>
+        <p>Your order has been placed successfully.</p>
 
-        <a asp-controller="Home" asp-action="Index" class="btn btn-dark">Continue Shopping</a>
+        <hr />
+
+        <p><strong>Order #:</strong> @Model.Id</p>
+        <p><strong>Status:</strong> @Model.OrderStatus?.StatusName</p>
+        <p><strong>Shipping status:</strong> @Model.ShippingStatus</p>
+        <p><strong>Estimated delivery:</strong> @Model.EstimatedDeliveryDate.ToString("dd.MM.yyyy")</p>
+        <p><strong>Payment method:</strong> @Model.PaymentMethod</p>
+        <p><strong>Courier:</strong> @Model.CourierName</p>
+        <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
+        <p><strong>Phone:</strong> @Model.PhoneNumber</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Address:</strong> @Model.AddressLine, @Model.City, @Model.PostalCode</p>
+        <p><strong>Total:</strong> @Model.TotalPrice.ToString("0.00") €</p>
+
+        @if (Model.OrderDetail != null && Model.OrderDetail.Any())
+        {
+            <hr />
+            <h4 class="mb-3">Ordered Products</h4>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Perfume</th>
+                        <th>Qty</th>
+                        <th>ML</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderDetail)
+                    {
+                        <tr>
+                            <td>@item.Perfume?.PerfumeName</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.Ml ml</td>
+                            <td>@item.MlPrice.ToString("0.00") €</td>
+                            <td>@((item.MlPrice * item.Quantity).ToString("0.00")) €</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <div class="mt-4">
+            <a asp-controller="Cart" asp-action="MyOrders" class="btn btn-dark">
+                Go to My Orders
+            </a>
+        </div>
     </div>
 </div>
