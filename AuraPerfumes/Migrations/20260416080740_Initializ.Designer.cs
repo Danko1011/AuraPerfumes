@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AuraPerfumes.Data.Migrations
+namespace AuraPerfumes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260319094205_AddVariantId")]
-    partial class AddVariantId
+    [Migration("20260416080740_Initializ")]
+    partial class Initializ
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,8 @@ namespace AuraPerfumes.Data.Migrations
 
                     b.HasIndex("ShoppingCartId");
 
+                    b.HasIndex("VariantId");
+
                     b.ToTable("CartDetail");
                 });
 
@@ -80,14 +82,60 @@ namespace AuraPerfumes.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AddressLine")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CourierName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EstimatedDeliveryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ShippingPrice")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ShippingStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -108,6 +156,9 @@ namespace AuraPerfumes.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Ml")
+                        .HasColumnType("int");
+
                     b.Property<double>("MlPrice")
                         .HasColumnType("float");
 
@@ -118,6 +169,9 @@ namespace AuraPerfumes.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VariantId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -184,7 +238,7 @@ namespace AuraPerfumes.Data.Migrations
 
                     b.HasIndex("GenderId");
 
-                    b.ToTable("Perfume");
+                    b.ToTable("Pefume", (string)null);
                 });
 
             modelBuilder.Entity("AuraPerfumes.Models.PerfumeVariant", b =>
@@ -443,9 +497,17 @@ namespace AuraPerfumes.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AuraPerfumes.Models.PerfumeVariant", "Variant")
+                        .WithMany()
+                        .HasForeignKey("VariantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Perfume");
 
                     b.Navigation("ShoppingCart");
+
+                    b.Navigation("Variant");
                 });
 
             modelBuilder.Entity("AuraPerfumes.Models.Order", b =>

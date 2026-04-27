@@ -4,19 +4,16 @@ using AuraPerfumes.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AuraPerfumes.Data.Migrations
+namespace AuraPerfumes.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260401150749_AddShippingStatusToOrders")]
-    partial class AddShippingStatusToOrders
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,7 +235,7 @@ namespace AuraPerfumes.Data.Migrations
 
                     b.HasIndex("GenderId");
 
-                    b.ToTable("Perfume");
+                    b.ToTable("Pefume", (string)null);
                 });
 
             modelBuilder.Entity("AuraPerfumes.Models.PerfumeVariant", b =>
@@ -500,7 +497,7 @@ namespace AuraPerfumes.Data.Migrations
                     b.HasOne("AuraPerfumes.Models.PerfumeVariant", "Variant")
                         .WithMany()
                         .HasForeignKey("VariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Perfume");
