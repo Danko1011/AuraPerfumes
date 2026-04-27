@@ -1,104 +1,118 @@
-﻿@model PerfumeDisplayModel
+@model AuraPerfumes.Models.DTOs.PerfumeDisplayModel
 
 @{
-
+    ViewData["Title"] = "Home";
 }
 
-<div class="my-2">
-
-    <form asp-action="Index" method="get" class="row g-2 align-items-end mb-3">
-
-        <div class="col-auto">
-            <select class="form-select" id="genderId" name="genderId">
-                <option value="0">All genders</option>
-                @foreach (var gender in Model.Genders)
-                {
-                    <option value="@gender.Id" selected="@(gender.Id == Model.GenderId)">
-                        @gender.GenderLabel
-                    </option>
-                }
-            </select>
-        </div>
-
-        <div class="col-auto">
-            <select class="form-select" id="designerName" name="designerName">
-                <option value="">All designers</option>
-                @foreach (var d in Model.Designers)
-                {
-                    <option value="@d" selected="@(d == Model.DesignerName)">@d</option>
-                }
-            </select>
-        </div>
-
-        <div class="col">
-            <input type="text"
-                   class="form-control"
-                   id="model"
-                   name="model"
-                   value="@Model.Model"
-                   placeholder="Search by Model " />
-        </div>
-
-        <div class="col-auto d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Search</button>
-            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Reset</a>
-        </div>
-
-    </form>
-</div>
-<div class="w-100 mt-4 d-flex flex-wrap">
-    @foreach (var perfume in Model.Perfumes){
-
-
-        <div class="card mx-2 mb-4" style="width: 13rem;">
-            @{
-                var img = string.IsNullOrWhiteSpace(perfume.Image)
-                ? Url.Content("~/images/proba.png")
-                : perfume.Image;
-            }
-
-            <a asp-controller="Home" asp-action="Details" asp-route-id="@perfume.Id" style="text-decoration:none; color:inherit;">
-                <img src="@img" style="width:100%;height:180px;object-fit:cover;" class="card-img-top" alt="@perfume.PerfumeModel" />
-                <div class="card-body">
-                    <h5 class="card-title">@perfume.PerfumeModel</h5>
-                </div>
-            </a>
-
-            <div class="card-body">
-                <p class="card-text">
-                    <b>Gender:</b>@perfume.GenderName <br />
-                    <b>Designer:</b>@perfume.PerfumeName <br />
-                    
-                </p>
+<div class="container mt-3">
+    <form asp-controller="Home" asp-action="Index" method="get" class="card shadow-sm p-3 mb-4">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-2">
+                <select name="genderId" class="form-select">
+                    <option value="0">All genders</option>
+                    @foreach (var gender in Model.Genders)
+                    {
+                        <option value="@gender.Id" selected="@(Model.GenderId == gender.Id)">
+                            @gender.GenderLabel
+                        </option>
+                    }
+                </select>
             </div>
+
+            <div class="col-md-2">
+                <select name="designerName" class="form-select">
+                    <option value="">All designers</option>
+                    @foreach (var designer in Model.Designers)
+                    {
+                        <option value="@designer" selected="@(Model.DesignerName == designer)">
+                            @designer
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <input name="model" value="@Model.Model" class="form-control" placeholder="Search by Model" />
+            </div>
+
+            <div class="col-md-1 d-grid">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+
+            <div class="col-md-1 d-grid">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Reset</a>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.Perfumes == null || !Model.Perfumes.Any())
+    {
+        <div class="alert alert-info text-center">
+            Няма намерени парфюми. Провери дали има записи в таблицата Pefume.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var perfume in Model.Perfumes)
+            {
+                var img = string.IsNullOrWhiteSpace(perfume.Image)
+                    ? Url.Content("~/images/proba.png")
+                    : (perfume.Image.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                        ? perfume.Image
+                        : Url.Content("~/images/" + perfume.Image));
+
+                var firstVariant = perfume.Variants?.OrderBy(v => v.Ml).FirstOrDefault();
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 shadow-sm perfume-card">
+                        <a asp-controller="Home" asp-action="Details" asp-route-id="@perfume.Id" class="text-decoration-none">
+                            <img src="@img"
+                                 class="card-img-top p-3"
+                                 style="height:260px; object-fit:contain;"
+                                 alt="@perfume.PerfumeModel" />
+                        </a>
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@perfume.PerfumeModel</h5>
+
+                            <p class="mb-1">
+                                <strong>Designer:</strong> @perfume.PerfumeName
+                            </p>
+
+                            <p class="mb-1">
+                                <strong>Gender:</strong> @perfume.GenderName
+                            </p>
+
+                            <p class="mb-3">
+                                <strong>Price:</strong> @perfume.Price.ToString("0.00") лв.
+                            </p>
+
+                            <div class="mt-auto d-grid gap-2">
+                                <a asp-controller="Home"
+                                   asp-action="Details"
+                                   asp-route-id="@perfume.Id"
+                                   class="btn btn-outline-primary">
+                                    Details
+                                </a>
+
+                                @if (firstVariant != null)
+                                {
+                                    <a asp-controller="Cart"
+                                       asp-action="AddItem"
+                                       asp-route-perfumeId="@perfume.Id"
+                                       asp-route-variantId="@firstVariant.Id"
+                                       asp-route-qty="1"
+                                       asp-route-redirect="1"
+                                       class="btn btn-primary">
+                                        Add to cart
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     }
 </div>
-
-@section Scripts{
-    <script>
-        async function add(perfumeId){
-            var usernameEl = document.getElementById("username");
-            if(usernameEl==null){
-                window.location.href="/Identity/Account/Login";
-                //var username = usernameEl.innerText;
-                  //if(username.length <1){
-                    //   window.location.href="/Identity/Account/Login";
-                  //}
-            }
-
-            try{
-                 var response = await fetch('/Cart/AddItem?perfumeId=${perfumeId}');
-                 if(response.status == 200){
-                      var result = await response.json();
-                      var cartCountEl = document.getElementById({"cartCount"});
-                      cartCountEl.innerHTML=result;
-                      window.location.href="#cartCount";
-            }
-            }
-            catch(err){
-                console.log(err;
-            }
-        }
-    </script>
-}

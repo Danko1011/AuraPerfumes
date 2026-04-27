@@ -1,69 +1,108 @@
-﻿@model ShoppingCart
+@model AuraPerfumes.Models.ShoppingCart
+
 @{
-    ViewData["Title"] = "GetUserCart";
+    ViewData["Title"] = "My Cart";
 }
 
-<div style="width:90%;margin:auto"  class="mt-2">
-    @if (Model != null && Model.CartDetails != null && Model.CartDetails.Count > 0)
+<div class="container mt-4">
+    <h3>My Cart</h3>
+
+    @if (Model != null && Model.CartDetails != null && Model.CartDetails.Any())
     {
+        <div class="table-responsive mt-3">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Perfume</th>
+                        <th>Designer</th>
+                        <th>Gender</th>
+                        <th>Size</th>
+                        <th>Unit Price</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th style="width:160px;">Actions</th>
+                    </tr>
+                </thead>
 
-        <h5>My Cart</h5>
+                <tbody>
+                    @foreach (var item in Model.CartDetails)
+                    {
+                        var img = string.IsNullOrWhiteSpace(item.Perfume.Image)
+                            ? Url.Content("~/images/proba.png")
+                            : (item.Perfume.Image.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                                ? item.Perfume.Image
+                                : Url.Content("~/images/" + item.Perfume.Image));
 
-        <table class="table table-striped">
-            <tr>
-                <th>Perfume</th>
-                <th>Image</th>
-                <th>Gender</th>
-                <th>Size</th>
-                <th>Unit Price</th>
-                <th>Qty</th>
-                <th>Total</th>
-                <th></th>
-            </tr>
-            @foreach (var item in Model.CartDetails)
-            {
-                <tr>
-                    <td>
-                        <strong>@item.Perfume.PerfumeModel</strong><br />
-                        <small>@item.Perfume.PerfumeName</small>
-                    </td>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="@img"
+                                         style="width:70px; height:70px; object-fit:contain;"
+                                         alt="@item.Perfume.PerfumeModel" />
+                                    <span>@item.Perfume.PerfumeModel</span>
+                                </div>
+                            </td>
 
-                    <td>
-                        @if (string.IsNullOrEmpty(item.Perfume.Image))
-                        {
-                            <img src="@Url.Content("~/images/proba.png")" style="width:80px;height:100px;object-fit:cover;" />
-                        }
-                        else
-                        {
-                            <img src="@item.Perfume.Image" style="width:80px;height:100px;object-fit:cover;" />
-                        }
-                    </td>
+                            <td>@item.Perfume.PerfumeName</td>
+                            <td>@(item.Perfume.Gender?.GenderLabel ?? "—")</td>
+                            <td>@item.Variant.Ml ml</td>
+                            <td>@item.Variant.Price.ToString("0.00") лв.</td>
+                            <td>@item.Quantity</td>
+                            <td>@((item.Variant.Price * item.Quantity).ToString("0.00")) лв.</td>
 
-                    <td>@item.Perfume.Gender.GenderLabel</td>
-                    <td>@item.Variant.Ml ml</td>
-                    <td>@item.Variant.Price.ToString("0.00") €</td>
-                    <td>@item.Quantity</td>
-                    <td>@((item.Variant.Price * item.Quantity).ToString("0.00")) €</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a asp-controller="Cart"
+                                       asp-action="AddItem"
+                                       asp-route-perfumeId="@item.PerfumeId"
+                                       asp-route-variantId="@item.VariantId"
+                                       asp-route-qty="1"
+                                       asp-route-redirect="1"
+                                       class="btn btn-sm btn-success">
+                                        +
+                                    </a>
 
-                    <td>
-                        <a class="btn btn-sm btn-info" href="/Cart/AddItem?perfumeId=@item.PerfumeId&variantId=@item.VariantId&redirect=1">+</a>
-                        <a class="btn btn-sm btn-info" href="/Cart/RemoveItem?perfumeId=@item.PerfumeId&variantId=@item.VariantId">-</a>
-                    </td>
-                </tr>
-            }
-        </table>
-        <div class="my-2">
-            <h5>Grand Total:</h5>
-            @Model.CartDetails.Select(item => item.Variant.Price * item.Quantity).Sum().ToString("0.00") <span>€</span>
+                                    <a asp-controller="Cart"
+                                       asp-action="RemoveItem"
+                                       asp-route-perfumeId="@item.PerfumeId"
+                                       asp-route-variantId="@item.VariantId"
+                                       class="btn btn-sm btn-danger">
+                                        -
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
 
-        <div class="my-2">
-            <a class="btn btn-primary" asp-controller="Cart" asp-action="OrderInfo">Checkout</a>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <h4>
+                Grand Total:
+                @Model.CartDetails.Sum(item => item.Variant.Price * item.Quantity).ToString("0.00")
+                лв.
+            </h4>
+
+            <div class="d-flex gap-2">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                    Continue shopping
+                </a>
+
+                <a asp-controller="Cart" asp-action="Checkout" class="btn btn-primary">
+                    Checkout
+                </a>
+            </div>
         </div>
     }
     else
     {
-        <h5>Cart is empty</h5>
+        <div class="alert alert-info mt-3">
+            Cart is empty.
+        </div>
+
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+            Continue shopping
+        </a>
     }
 </div>
-
