@@ -1,4 +1,5 @@
 using AuraPerfumes.Data;
+using AuraPerfumes.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -22,15 +23,44 @@ namespace AuraPerfumes
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<PerfumeImportService>();
+            builder.Services.AddScoped<CloudinaryImageService>();
             builder.Services.AddTransient<IHomeRepository, HomeRepository>();
             builder.Services.AddScoped<ICartRepository, CartRepository>();
             builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
-            /*using(var scope = app.Services.CreateScope())
+            using (var scope = app.Services.CreateScope())
             {
-                await DbSeeder.SeedDefaultData(scope.ServiceProvider);
-            }*/
-            
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                string adminEmail = "admin@gmail.com";
+                string adminPassword = "Admin123!";
+
+                if (!await roleManager.RoleExistsAsync("Admin"))
+                {
+                    await roleManager.CreateAsync(new IdentityRole("Admin"));
+                }
+
+                var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+                if (adminUser == null)
+                {
+                    adminUser = new IdentityUser
+                    {
+                        UserName = adminEmail,
+                        Email = adminEmail,
+                        EmailConfirmed = true
+                    };
+
+                    await userManager.CreateAsync(adminUser, adminPassword);
+                }
+
+                if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+                {
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                }
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

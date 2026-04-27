@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Import perfumes";
+}
+
+<h2>Import perfumes from CSV</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<form asp-controller="AdminPerfumeImport"
+      asp-action="ImportCsv"
+      method="post"
+      enctype="multipart/form-data">
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-group mb-3">
+        <label for="csvFile">CSV файл</label>
+        <input type="file" name="csvFile" id="csvFile" class="form-control" accept=".csv" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Import
+    </button>
+</form>
+
+<hr />
+
+<h4>CSV формат</h4>
+
+<pre>
+Brand,Model,BasePrice,ImageUrl,GenderId,Description,Variants
+Dior,Sauvage EDP,199.99,https://example.com/image.jpg,1,Описание,"30:119.99;50:159.99;100:199.99"
+</pre>
