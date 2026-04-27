@@ -1,4 +1,4 @@
-﻿using AuraPerfumes.Data;
+using AuraPerfumes.Data;
 using AuraPerfumes.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,30 +20,38 @@ namespace AuraPerfumes.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int id)
         {
             var perfume = await _db.Perfumes
+                .Include(p => p.Gender)
                 .Include(p => p.Variants)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (perfume == null)
                 return NotFound();
 
-            ViewBag.PerfumeId = perfume.Id;
-            ViewBag.PerfumeName = perfume.PerfumeName;
-            ViewBag.PerfumeModel = perfume.PerfumeModel;
-
             return View(perfume);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(PerfumeVariant variant)
+        public async Task<IActionResult> Add(int perfumeId, int ml, double price)
         {
-            if (!ModelState.IsValid)
-                return RedirectToAction("Index", new { id = variant.PerfumeId });
+            if (ml <= 0 || price <= 0)
+                return RedirectToAction(nameof(Index), new { id = perfumeId });
 
-            _db.PerfumeVariants.Add(variant);
-            await _db.SaveChangesAsync();
+            var exists = await _db.PerfumeVariants.AnyAsync(v => v.PerfumeId == perfumeId && v.Ml == ml);
 
-            return RedirectToAction("Index", new { id = variant.PerfumeId });
+            if (!exists)
+            {
+                _db.PerfumeVariants.Add(new PerfumeVariant
+                {
+                    PerfumeId = perfumeId,
+                    Ml = ml,
+                    Price = price
+                });
+
+                await _db.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index), new { id = perfumeId });
         }
 
         [HttpPost]
@@ -51,6 +59,7 @@ namespace AuraPerfumes.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var variant = await _db.PerfumeVariants.FindAsync(id);
+
             if (variant == null)
                 return NotFound();
 
@@ -59,7 +68,7 @@ namespace AuraPerfumes.Areas.Admin.Controllers
             _db.PerfumeVariants.Remove(variant);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Index", new { id = perfumeId });
+            return RedirectToAction(nameof(Index), new { id = perfumeId });
         }
     }
 }

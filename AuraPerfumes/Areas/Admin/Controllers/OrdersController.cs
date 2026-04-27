@@ -54,13 +54,13 @@ namespace AuraPerfumes.Areas.Admin.Controllers
             if (order == null)
                 return NotFound();
 
-            order.OrderStatusId = orderStatusId;
-
             var status = await _db.OrderStatuses.FindAsync(orderStatusId);
-            if (status != null && !string.IsNullOrWhiteSpace(status.StatusName))
-            {
-                order.ShippingStatus = status.StatusName;
-            }
+
+            if (status == null)
+                return RedirectToAction(nameof(Index));
+
+            order.OrderStatusId = orderStatusId;
+            order.ShippingStatus = status.StatusName ?? order.ShippingStatus;
 
             await _db.SaveChangesAsync();
 

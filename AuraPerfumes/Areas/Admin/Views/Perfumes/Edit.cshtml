@@ -1,62 +1,63 @@
-﻿@model AuraPerfumes.Models.Perfume
+@{ ViewData["Title"] = "Edit Perfume"; }
+
+@model AuraPerfumes.Models.Perfume
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Edit Perfume";
+    ViewData["Title"] = ViewData["Title"] ?? "Perfume";
 }
 
-<div class="container mt-4">
-    <div class="checkout-wrapper">
-        <h2 class="mb-4">Edit Perfume</h2>
-        <p>Genders count: @ViewBag.DebugGenderCount</p>
-        <form asp-area="Admin" asp-controller="Perfumes" asp-action="Edit" method="post" enctype="multipart/form-data">
-            <input asp-for="Id" type="hidden" />
-            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+<div class="card-admin form-panel">
+    <form method="post">
+        @Html.AntiForgeryToken()
 
-            <div class="mb-3">
-                <label asp-for="PerfumeName" class="form-label">Perfume Name</label>
-                <input asp-for="PerfumeName" class="form-control" />
+        <input asp-for="Id" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="PerfumeName" class="form-label">Brand</label>
+                <input asp-for="PerfumeName" class="form-control" placeholder="Dior" />
                 <span asp-validation-for="PerfumeName" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="PerfumeModel" class="form-label">Perfume Model</label>
-                <input asp-for="PerfumeModel" class="form-control" />
+            <div class="col-md-6">
+                <label asp-for="PerfumeModel" class="form-label">Model</label>
+                <input asp-for="PerfumeModel" class="form-control" placeholder="Sauvage EDP" />
                 <span asp-validation-for="PerfumeModel" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6">
                 <label asp-for="Price" class="form-label">Base Price</label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6">
                 <label asp-for="GenderId" class="form-label">Gender</label>
-                <select asp-for="GenderId" class="form-select">
-                    <option value="1">Male</option>
-                    <option value="2">Female</option>
-                    <option value="3">Unisex</option>
-                </select>
+                <select asp-for="GenderId" asp-items="ViewBag.Genders" class="form-select"></select>
                 <span asp-validation-for="GenderId" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-12">
+                <label asp-for="Image" class="form-label">Image URL</label>
+                <input asp-for="Image" class="form-control" placeholder="Paste exact perfume image URL here" />
+                <small class="text-muted">За точна снимка: отвори снимката на продукта, Copy image address, paste тук.</small>
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
                 <label asp-for="Description" class="form-label">Description</label>
                 <textarea asp-for="Description" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+        </div>
 
-            <div class="mb-3">
-                <label asp-for="Image" class="form-label">Image URL</label>
-                <input asp-for="Image" class="form-control" placeholder="https://example.com/image.jpg" />
-                <span asp-validation-for="Image" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-dark">Save Changes</button>
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-dark">Save</button>
             <a asp-area="Admin" asp-controller="Perfumes" asp-action="Index" class="btn btn-outline-secondary">Back</a>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

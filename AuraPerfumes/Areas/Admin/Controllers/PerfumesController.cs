@@ -1,4 +1,4 @@
-﻿using AuraPerfumes.Data;
+using AuraPerfumes.Data;
 using AuraPerfumes.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,19 +12,31 @@ namespace AuraPerfumes.Areas.Admin.Controllers
     public class PerfumesController : Controller
     {
         private readonly ApplicationDbContext _db;
-        private readonly IWebHostEnvironment _env;
 
-        public PerfumesController(ApplicationDbContext db, IWebHostEnvironment env)
+        public PerfumesController(ApplicationDbContext db)
         {
             _db = db;
-            _env = env;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-            var perfumes = await _db.Perfumes
+            var query = _db.Perfumes
                 .Include(p => p.Gender)
                 .Include(p => p.Variants)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(p =>
+                    p.PerfumeName.Contains(search) ||
+                    p.PerfumeModel.Contains(search));
+            }
+
+            ViewBag.Search = search;
+
+            var perfumes = await query
+                .OrderBy(p => p.PerfumeName)
+                .ThenBy(p => p.PerfumeModel)
                 .ToListAsync();
 
             return View(perfumes);
@@ -32,7 +44,7 @@ namespace AuraPerfumes.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create()
         {
-            ViewBag.Genders = new SelectList(await _db.Genders.ToListAsync(), "Id", "GenderLabel");
+            await LoadGenders();
             return View(new Perfume());
         }
 
@@ -42,7 +54,7 @@ namespace AuraPerfumes.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Genders = new SelectList(await _db.Genders.ToListAsync(), "Id", "GenderLabel", perfume.GenderId);
+                await LoadGenders();
                 return View(perfume);
             }
 
@@ -55,37 +67,38 @@ namespace AuraPerfumes.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var perfume = await _db.Perfumes.FindAsync(id);
+
             if (perfume == null)
                 return NotFound();
 
-            var genders = await _db.Genders.ToListAsync();
-
-            ViewBag.DebugGenderCount = genders.Count;
-            ViewBag.Genders = new SelectList(genders, "Id", "GenderLabel", perfume.GenderId);
-
+            await LoadGenders();
             return View(perfume);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Perfume perfume)
+        public async Task<IActionResult> Edit(int id, Perfume perfume)
         {
-            var existingPerfume = await _db.Perfumes.FindAsync(perfume.Id);
-            if (existingPerfume == null)
+            if (id != perfume.Id)
                 return NotFound();
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Genders = new SelectList(await _db.Genders.ToListAsync(), "Id", "GenderLabel", perfume.GenderId);
+                await LoadGenders();
                 return View(perfume);
             }
 
-            existingPerfume.PerfumeName = perfume.PerfumeName;
-            existingPerfume.PerfumeModel = perfume.PerfumeModel;
-            existingPerfume.Price = perfume.Price;
-            existingPerfume.Description = perfume.Description;
-            existingPerfume.GenderId = perfume.GenderId;
-            existingPerfume.Image = perfume.Image;
+            var existing = await _db.Perfumes.FindAsync(id);
+
+            if (existing == null)
+                return NotFound();
+
+            existing.PerfumeName = perfume.PerfumeName;
+            existing.PerfumeModel = perfume.PerfumeModel;
+            existing.Price = perfume.Price;
+            existing.Image = perfume.Image;
+            existing.GenderId = perfume.GenderId;
+            existing.Description = perfume.Description;
 
             await _db.SaveChangesAsync();
 
@@ -96,6 +109,7 @@ namespace AuraPerfumes.Areas.Admin.Controllers
         {
             var perfume = await _db.Perfumes
                 .Include(p => p.Gender)
+                .Include(p => p.Variants)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (perfume == null)
@@ -108,14 +122,25 @@ namespace AuraPerfumes.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var perfume = await _db.Perfumes.FindAsync(id);
+            var perfume = await _db.Perfumes
+                .Include(p => p.Variants)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (perfume == null)
                 return NotFound();
+
+            if (perfume.Variants != null && perfume.Variants.Any())
+                _db.PerfumeVariants.RemoveRange(perfume.Variants);
 
             _db.Perfumes.Remove(perfume);
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task LoadGenders()
+        {
+            ViewBag.Genders = new SelectList(await _db.Genders.OrderBy(g => g.GenderLabel).ToListAsync(), "Id", "GenderLabel");
         }
     }
 }

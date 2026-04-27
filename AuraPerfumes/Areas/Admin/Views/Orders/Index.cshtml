@@ -2,14 +2,11 @@
 @using AuraPerfumes.Models
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Orders";
     var statuses = ViewBag.Statuses as List<OrderStatus> ?? new List<OrderStatus>();
 }
 
-<div class="admin-card">
-    <h3 class="mb-3">Orders</h3>
-
+<div class="card-admin">
     @if (Model != null && Model.Any())
     {
         <div class="table-responsive">
@@ -32,7 +29,7 @@
                     <tr>
                         <td><strong>#@order.Id</strong></td>
                         <td>@order.CreateDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>@($"{order.FirstName} {order.LastName}")</td>
+                        <td>@order.FirstName @order.LastName</td>
                         <td>@order.PhoneNumber</td>
                         <td>@order.TotalPrice.ToString("0.00") лв.</td>
                         <td><span class="badge-soft">@order.OrderStatus?.StatusName</span></td>

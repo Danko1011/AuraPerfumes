@@ -2,12 +2,11 @@
 @using AuraPerfumes.Models
 
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = $"Order #{Model.Id}";
     var statuses = ViewBag.Statuses as List<OrderStatus> ?? new List<OrderStatus>();
 }
 
-<div class="admin-card mb-3">
+<div class="card-admin mb-3">
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
         <div>
             <h3>Order #@Model.Id</h3>
@@ -34,7 +33,7 @@
 
 <div class="row g-3">
     <div class="col-lg-7">
-        <div class="admin-card">
+        <div class="card-admin">
             <h4>Products</h4>
 
             @if (Model.OrderDetail != null && Model.OrderDetail.Any())
@@ -71,7 +70,7 @@
     </div>
 
     <div class="col-lg-5">
-        <div class="admin-card">
+        <div class="card-admin">
             <h4>Customer</h4>
             <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
             <p><strong>Email:</strong> @Model.Email</p>
