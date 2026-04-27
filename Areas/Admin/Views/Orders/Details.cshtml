@@ -1,0 +1,93 @@
+@model AuraPerfumes.Models.Order
+@using AuraPerfumes.Models
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = $"Order #{Model.Id}";
+    var statuses = ViewBag.Statuses as List<OrderStatus> ?? new List<OrderStatus>();
+}
+
+<div class="admin-card mb-3">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+            <h3>Order #@Model.Id</h3>
+            <p class="text-muted mb-0">@Model.CreateDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
+        </div>
+
+        <form asp-area="Admin" asp-controller="Orders" asp-action="ChangeStatus" method="post" class="d-flex gap-2">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <select name="orderStatusId" class="form-select">
+                @foreach (var status in statuses)
+                {
+                    <option value="@status.Id" selected="@(Model.OrderStatusId == status.Id)">
+                        @status.StatusName
+                    </option>
+                }
+            </select>
+
+            <button type="submit" class="btn btn-dark">Save Status</button>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="admin-card">
+            <h4>Products</h4>
+
+            @if (Model.OrderDetail != null && Model.OrderDetail.Any())
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Perfume</th>
+                            <th>Ml</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.OrderDetail)
+                    {
+                        <tr>
+                            <td>@item.Perfume?.PerfumeName @item.Perfume?.PerfumeModel</td>
+                            <td>@item.Ml ml</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.MlPrice.ToString("0.00") лв.</td>
+                            <td>@((item.MlPrice * item.Quantity).ToString("0.00")) лв.</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted">No order details.</p>
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="admin-card">
+            <h4>Customer</h4>
+            <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Phone:</strong> @Model.PhoneNumber</p>
+            <p><strong>Address:</strong> @Model.AddressLine, @Model.City, @Model.PostalCode</p>
+            <p><strong>Courier:</strong> @Model.CourierName</p>
+            <p><strong>Payment:</strong> @Model.PaymentMethod</p>
+            <p><strong>Notes:</strong> @Model.Notes</p>
+
+            <hr />
+
+            <p><strong>Shipping:</strong> @Model.ShippingPrice.ToString("0.00") лв.</p>
+            <p><strong>Discount:</strong> -@Model.Discount.ToString("0.00") лв.</p>
+            <h4>Total: @Model.TotalPrice.ToString("0.00") лв.</h4>
+        </div>
+    </div>
+</div>
+
+<a asp-area="Admin" asp-controller="Orders" asp-action="Index" class="btn btn-outline-secondary mt-3">Back to orders</a>

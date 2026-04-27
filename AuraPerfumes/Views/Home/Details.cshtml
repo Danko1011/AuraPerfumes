@@ -3,8 +3,8 @@
 @{
     ViewData["Title"] = "Details";
     var p = Model.Perfume;
-    var imgSrc = string.IsNullOrWhiteSpace(p.Image)
-        ? Url.Content("~/images/proba.png")
+    var img = string.IsNullOrWhiteSpace(p.Image)
+        ? Url.Content("~/images/perfume-placeholder.svg")
         : (p.Image.StartsWith("http", StringComparison.OrdinalIgnoreCase)
             ? p.Image
             : Url.Content("~/images/" + p.Image));
@@ -13,137 +13,99 @@
     var selected = variants.FirstOrDefault();
 }
 
-<div class="container mt-4">
-    <div class="row g-4">
-        <div class="col-md-5">
-            <div class="card shadow-sm p-3">
-                <img src="@imgSrc"
-                     class="img-fluid"
-                     style="max-height:520px; object-fit:contain;"
-                     alt="@p.PerfumeModel" />
+<section class="details-section">
+    <div class="container">
+        <div class="details-card">
+            <div class="details-image">
+                <img src="@img" alt="@p.PerfumeModel" />
+            </div>
+
+            <div class="details-info">
+                <p class="brand">@p.PerfumeName</p>
+                <h1>@p.PerfumeModel</h1>
+
+                <div class="details-tags">
+                    <span>@(p.Gender?.GenderLabel ?? "Fragrance")</span>
+                    <span>Designer perfume</span>
+                </div>
+
+                <p class="description">
+                    @(string.IsNullOrWhiteSpace(p.Description) ? "A stylish fragrance for every occasion." : p.Description)
+                </p>
+
+                @if (variants.Any())
+                {
+                    <form asp-controller="Cart" asp-action="AddItem" method="get" class="buy-box">
+                        <input type="hidden" name="perfumeId" value="@p.Id" />
+                        <input type="hidden" name="qty" value="1" />
+                        <input type="hidden" name="redirect" value="1" />
+
+                        <label class="form-label">Choose size</label>
+
+                        <div class="variant-pills">
+                            @foreach (var variant in variants)
+                            {
+                                <label class="variant-pill">
+                                    <input class="variant-radio"
+                                           type="radio"
+                                           name="variantId"
+                                           value="@variant.Id"
+                                           data-price="@variant.Price.ToString("0.00")"
+                                           checked="@(selected != null && selected.Id == variant.Id)" />
+                                    <span>@variant.Ml ml</span>
+                                </label>
+                            }
+                        </div>
+
+                        <div class="detail-price">
+                            <span id="selectedPrice">@((selected?.Price ?? p.Price).ToString("0.00"))</span> лв.
+                        </div>
+
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button type="submit" class="btn btn-dark btn-lg">Add to cart</button>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">Back</a>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <div class="alert alert-warning">No size variants found for this perfume.</div>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                }
             </div>
         </div>
 
-        <div class="col-md-7">
-            <h2>@p.PerfumeModel</h2>
-            <h5 class="text-muted">@p.PerfumeName</h5>
+        @if (Model.RelatedPerfumes != null && Model.RelatedPerfumes.Any())
+        {
+            <h2 class="section-title">You may also like</h2>
 
-            <hr />
+            <div class="related-grid">
+                @foreach (var item in Model.RelatedPerfumes)
+                {
+                    var relatedImg = string.IsNullOrWhiteSpace(item.Image)
+                        ? Url.Content("~/images/perfume-placeholder.svg")
+                        : (item.Image.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                            ? item.Image
+                            : Url.Content("~/images/" + item.Image));
 
-            <p>
-                @(string.IsNullOrWhiteSpace(p.Description) ? "No description yet." : p.Description)
-            </p>
-
-            <p><strong>Gender:</strong> @(p.Gender != null ? p.Gender.GenderLabel : "—")</p>
-
-            @if (variants.Any())
-            {
-                <form asp-controller="Cart" asp-action="AddItem" method="get" class="mt-3">
-                    <input type="hidden" name="perfumeId" value="@p.Id" />
-                    <input type="hidden" name="qty" value="1" />
-                    <input type="hidden" name="redirect" value="1" />
-
-                    <label class="form-label fw-bold">Choose size</label>
-
-                    <div class="mb-3">
-                        @foreach (var variant in variants)
-                        {
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input variant-radio"
-                                       type="radio"
-                                       name="variantId"
-                                       id="variant_@variant.Id"
-                                       value="@variant.Id"
-                                       data-price="@variant.Price.ToString("0.00")"
-                                       checked="@(selected != null && selected.Id == variant.Id)" />
-
-                                <label class="form-check-label" for="variant_@variant.Id">
-                                    @variant.Ml ml
-                                </label>
-                            </div>
-                        }
-                    </div>
-
-                    <h4 class="mb-3">
-                        Price:
-                        <span id="selectedPrice">
-                            @(selected?.Price.ToString("0.00") ?? p.Price.ToString("0.00"))
-                        </span>
-                        лв.
-                    </h4>
-
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            Add to cart
-                        </button>
-
-                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
-                            Back
-                        </a>
-                    </div>
-                </form>
-            }
-            else
-            {
-                <div class="alert alert-warning">
-                    Няма добавени варианти с милилитри за този парфюм.
-                </div>
-
-                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
-                    Back
-                </a>
-            }
-        </div>
-    </div>
-
-    @if (Model.RelatedPerfumes != null && Model.RelatedPerfumes.Any())
-    {
-        <hr class="my-5" />
-
-        <h4>You may also like</h4>
-
-        <div class="row">
-            @foreach (var item in Model.RelatedPerfumes)
-            {
-                var img = string.IsNullOrWhiteSpace(item.Image)
-                    ? Url.Content("~/images/proba.png")
-                    : (item.Image.StartsWith("http", StringComparison.OrdinalIgnoreCase)
-                        ? item.Image
-                        : Url.Content("~/images/" + item.Image));
-
-                var price = item.Variants?.OrderBy(v => v.Ml).FirstOrDefault()?.Price ?? item.Price;
-
-                <div class="col-md-4 mb-3">
-                    <div class="card h-100 shadow-sm">
-                        <img src="@img"
-                             class="card-img-top p-3"
-                             style="height:220px; object-fit:contain;"
-                             alt="@item.PerfumeModel" />
-
-                        <div class="card-body">
-                            <h6>@item.PerfumeModel</h6>
-                            <p class="mb-2">@price.ToString("0.00") лв.</p>
-
-                            <a asp-controller="Home"
-                               asp-action="Details"
-                               asp-route-id="@item.Id"
-                               class="btn btn-sm btn-outline-primary">
-                                Details
-                            </a>
+                    <a class="related-card" asp-controller="Home" asp-action="Details" asp-route-id="@item.Id">
+                        <img src="@relatedImg" alt="@item.PerfumeModel" />
+                        <div>
+                            <strong>@item.PerfumeModel</strong>
+                            <span>@item.PerfumeName</span>
                         </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
-</div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</section>
 
 @section Scripts {
     <script>
         document.querySelectorAll(".variant-radio").forEach(function (radio) {
             radio.addEventListener("change", function () {
-                const price = this.getAttribute("data-price");
-                document.getElementById("selectedPrice").innerText = price;
+                document.getElementById("selectedPrice").innerText = this.dataset.price;
             });
         });
     </script>

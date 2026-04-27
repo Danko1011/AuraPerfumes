@@ -1,0 +1,62 @@
+@model AuraPerfumes.Models.Perfume
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Add Perfume";
+}
+
+<div class="admin-card form-panel">
+    <form asp-area="Admin" asp-controller="Perfumes" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="PerfumeName" class="form-label">Brand</label>
+                <input asp-for="PerfumeName" class="form-control" placeholder="Dior" />
+                <span asp-validation-for="PerfumeName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="PerfumeModel" class="form-label">Model</label>
+                <input asp-for="PerfumeModel" class="form-control" placeholder="Sauvage EDP" />
+                <span asp-validation-for="PerfumeModel" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Price" class="form-label">Base Price</label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="GenderId" class="form-label">Gender</label>
+                <select asp-for="GenderId" asp-items="ViewBag.Genders" class="form-select"></select>
+                <span asp-validation-for="GenderId" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Image" class="form-label">Image URL</label>
+                <input asp-for="Image" class="form-control" placeholder="Paste exact product image URL here" />
+                <small class="text-muted">Open the product image, copy image address, paste here.</small>
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-dark">Save</button>
+            <a asp-area="Admin" asp-controller="Perfumes" asp-action="Index" class="btn btn-outline-secondary">Back</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

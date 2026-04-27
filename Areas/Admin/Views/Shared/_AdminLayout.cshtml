@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        :root {
+            --admin-dark: #111827;
+            --admin-card: #ffffff;
+            --admin-bg: #f4f6fb;
+            --admin-gold: #d4a94f;
+            --admin-muted: #6b7280;
+            --admin-line: rgba(17,24,39,.10);
+        }
+
+        body {
+            margin: 0;
+            background: var(--admin-bg);
+            color: #111827;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        }
+
+        .admin-shell {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+        }
+
+        .admin-sidebar {
+            background: linear-gradient(180deg, #111827, #1f2937);
+            color: #fff;
+            padding: 24px 18px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .admin-brand {
+            font-size: 1.35rem;
+            font-weight: 900;
+            text-decoration: none;
+            color: #fff;
+            display: block;
+            margin-bottom: 28px;
+        }
+
+        .admin-brand span {
+            color: var(--admin-gold);
+        }
+
+        .admin-nav {
+            display: grid;
+            gap: 8px;
+        }
+
+        .admin-nav a {
+            color: rgba(255,255,255,.86);
+            text-decoration: none;
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-weight: 700;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .admin-nav a:hover {
+            background: rgba(255,255,255,.10);
+            color: #fff;
+        }
+
+        .admin-main {
+            padding: 28px;
+        }
+
+        .admin-topbar {
+            background: var(--admin-card);
+            border: 1px solid var(--admin-line);
+            border-radius: 22px;
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            box-shadow: 0 18px 40px rgba(17,24,39,.06);
+        }
+
+        .admin-page-title h1 {
+            margin: 0;
+            font-weight: 900;
+            letter-spacing: -.04em;
+        }
+
+        .admin-page-title p {
+            margin: 4px 0 0;
+            color: var(--admin-muted);
+        }
+
+        .admin-card {
+            background: var(--admin-card);
+            border: 1px solid var(--admin-line);
+            border-radius: 22px;
+            padding: 22px;
+            box-shadow: 0 18px 40px rgba(17,24,39,.06);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid var(--admin-line);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 14px 30px rgba(17,24,39,.05);
+        }
+
+        .stat-card span {
+            color: var(--admin-muted);
+            font-weight: 800;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 2rem;
+            margin-top: 8px;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .quick-card {
+            background: #fff;
+            border: 1px solid var(--admin-line);
+            border-radius: 20px;
+            padding: 20px;
+            text-decoration: none;
+            color: #111827;
+            box-shadow: 0 14px 30px rgba(17,24,39,.05);
+            transition: .18s ease;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-3px);
+            color: #111827;
+            box-shadow: 0 22px 46px rgba(17,24,39,.10);
+        }
+
+        .quick-card .icon {
+            font-size: 2rem;
+        }
+
+        .quick-card h3 {
+            font-size: 1.1rem;
+            margin: 12px 0 6px;
+            font-weight: 900;
+        }
+
+        .quick-card p {
+            color: var(--admin-muted);
+            margin: 0;
+        }
+
+        .table {
+            vertical-align: middle;
+        }
+
+        .admin-img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            background: #f8f1e8;
+            border-radius: 14px;
+            border: 1px solid var(--admin-line);
+        }
+
+        .form-panel {
+            max-width: 920px;
+        }
+
+        .btn-dark {
+            background: #111827;
+            border-color: #111827;
+        }
+
+        .badge-soft {
+            background: #f3ead6;
+            color: #6f5219;
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-weight: 800;
+        }
+
+        @media (max-width: 992px) {
+            .admin-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-sidebar {
+                position: static;
+                height: auto;
+            }
+
+            .stat-grid,
+            .quick-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stat-grid,
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-main {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-shell">
+        <aside class="admin-sidebar">
+            <a class="admin-brand" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                Aura<span>Admin</span>
+            </a>
+
+            <nav class="admin-nav">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a>
+                <a asp-area="Admin" asp-controller="Perfumes" asp-action="Index">🧴 Manage Perfumes</a>
+                <a asp-area="Admin" asp-controller="Orders" asp-action="Index">🧾 Orders</a>
+                <a asp-area="" asp-controller="AdminPerfumeImport" asp-action="Index">📦 CSV Import</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index">🏠 Store</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-topbar">
+                <div class="admin-page-title">
+                    <h1>@ViewData["Title"]</h1>
+                    <p>Manage your perfume store.</p>
+                </div>
+
+                <a class="btn btn-outline-dark" asp-area="" asp-controller="Home" asp-action="Index">View Store</a>
+            </div>
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

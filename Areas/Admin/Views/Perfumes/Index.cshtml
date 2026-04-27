@@ -1,0 +1,55 @@
+@model IEnumerable<AuraPerfumes.Models.Perfume>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Manage Perfumes";
+}
+
+<div class="admin-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="m-0">Perfumes</h3>
+        <a asp-area="Admin" asp-controller="Perfumes" asp-action="Create" class="btn btn-dark">Add Perfume</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Gender</th>
+                    <th>Base Price</th>
+                    <th>Variants</th>
+                    <th style="width:260px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var perfume in Model)
+            {
+                var img = string.IsNullOrWhiteSpace(perfume.Image)
+                    ? Url.Content("~/images/perfume-placeholder.svg")
+                    : (perfume.Image.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                        ? perfume.Image
+                        : Url.Content("~/images/" + perfume.Image));
+
+                <tr>
+                    <td><img src="@img" class="admin-img" alt="@perfume.PerfumeModel" /></td>
+                    <td><strong>@perfume.PerfumeName</strong></td>
+                    <td>@perfume.PerfumeModel</td>
+                    <td>@perfume.Gender?.GenderLabel</td>
+                    <td>@perfume.Price.ToString("0.00") лв.</td>
+                    <td>@(perfume.Variants?.Count ?? 0)</td>
+                    <td>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a asp-area="Admin" asp-controller="Perfumes" asp-action="Edit" asp-route-id="@perfume.Id" class="btn btn-sm btn-outline-dark">Edit</a>
+                            <a asp-area="Admin" asp-controller="PerfumeVariants" asp-action="Index" asp-route-id="@perfume.Id" class="btn btn-sm btn-outline-primary">Variants</a>
+                            <a asp-area="Admin" asp-controller="Perfumes" asp-action="Delete" asp-route-id="@perfume.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

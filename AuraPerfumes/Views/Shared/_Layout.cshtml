@@ -3,51 +3,42 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EPerfumeStore</title>
+    <title>@ViewData["Title"] - Aura Perfumes</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand text-success fw-bold" asp-controller="Home" asp-action="Index">
-                    EPerfumeStore
+    <header class="aura-header">
+        <nav class="navbar navbar-expand-lg navbar-dark aura-navbar">
+            <div class="container">
+                <a class="navbar-brand aura-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                    Aura<span>Perfumes</span>
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#auraNav"
+                        aria-controls="auraNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div id="auraNav" class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Cart" asp-action="MyOrders">My Orders</a>
+                            <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="MyOrders">My Orders</a>
                         </li>
 
-                        @if (User.IsInRole("Admin"))
+                        @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="AdminPerfumeImport" asp-action="Index">
-                                    Admin Import
+                                <a class="nav-link admin-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                    Admin Panel
                                 </a>
                             </li>
                         }
-                    </ul>
-
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Cart" asp-action="GetUserCart">
-                                <span id="cartCount" class="badge bg-info text-dark">0</span>
-                                🛒
-                            </a>
-                        </li>
                     </ul>
 
                     <partial name="_LoginPartial" />
@@ -56,11 +47,16 @@
         </nav>
     </header>
 
-    <div class="container-fluid">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="aura-footer">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+            <span>© @DateTime.Now.Year AuraPerfumes</span>
+            <span class="text-muted">Luxury fragrances, curated for you.</span>
+        </div>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
