@@ -3,6 +3,7 @@ using AuraPerfumes.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using AuraPerfumes.Constants;
 
 namespace AuraPerfumes
 {
@@ -37,9 +38,14 @@ namespace AuraPerfumes
                 string adminEmail = "admin@gmail.com";
                 string adminPassword = "Admin123!";
 
-                if (!await roleManager.RoleExistsAsync("Admin"))
+                if (!await roleManager.RoleExistsAsync(Roles.Admin.ToString()))
                 {
-                    await roleManager.CreateAsync(new IdentityRole("Admin"));
+                    await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
+                }
+
+                if (!await roleManager.RoleExistsAsync(Roles.User.ToString()))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
                 }
 
                 var adminUser = await userManager.FindByEmailAsync(adminEmail);
